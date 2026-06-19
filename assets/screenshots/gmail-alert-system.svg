@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900">
+  <rect width="1440" height="900" fill="#0f172a"/>
+  <rect x="40" y="40" width="1360" height="820" rx="24" fill="#111827" stroke="#334155"/>
+  <text x="72" y="95" fill="#e5e7eb" font-family="Arial" font-size="30" font-weight="700">Anonymized n8n Workflow Capture: Gmail Alert System</text>
+  <text x="72" y="130" fill="#94a3b8" font-family="Arial" font-size="16">Portfolio-safe recreation from sanitized workflow structure. No real credentials, IDs, payloads, or private data.</text>
+  <rect x="90" y="350" width="230" height="86" rx="16" fill="#2563eb" stroke="#e2e8f0" stroke-opacity="0.22"/><text x="112" y="388" fill="#ffffff" font-family="Arial" font-size="18" font-weight="700">Webhook Event</text><text x="112" y="414" fill="#dbeafe" font-family="Arial" font-size="13">placeholder node</text>
+  <line x1="320" y1="393" x2="345" y2="393" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/><polygon points="345,393 333,386 333,400" fill="#38bdf8"/>
+  <rect x="345" y="350" width="230" height="86" rx="16" fill="#7c3aed" stroke="#e2e8f0" stroke-opacity="0.22"/><text x="367" y="388" fill="#ffffff" font-family="Arial" font-size="18" font-weight="700">Validate Severity</text><text x="367" y="414" fill="#dbeafe" font-family="Arial" font-size="13">placeholder node</text>
+  <line x1="575" y1="393" x2="600" y2="393" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/><polygon points="600,393 588,386 588,400" fill="#38bdf8"/>
+  <rect x="600" y="350" width="230" height="86" rx="16" fill="#0f766e" stroke="#e2e8f0" stroke-opacity="0.22"/><text x="622" y="388" fill="#ffffff" font-family="Arial" font-size="18" font-weight="700">Format Alert</text><text x="622" y="414" fill="#dbeafe" font-family="Arial" font-size="13">placeholder node</text>
+  <line x1="830" y1="393" x2="855" y2="393" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/><polygon points="855,393 843,386 843,400" fill="#38bdf8"/>
+  <rect x="855" y="350" width="230" height="86" rx="16" fill="#ea580c" stroke="#e2e8f0" stroke-opacity="0.22"/><text x="877" y="388" fill="#ffffff" font-family="Arial" font-size="18" font-weight="700">Email Node</text><text x="877" y="414" fill="#dbeafe" font-family="Arial" font-size="13">placeholder node</text>
+  <line x1="1085" y1="393" x2="1110" y2="393" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/><polygon points="1110,393 1098,386 1098,400" fill="#38bdf8"/>
+  <rect x="1110" y="350" width="230" height="86" rx="16" fill="#475569" stroke="#e2e8f0" stroke-opacity="0.22"/><text x="1132" y="388" fill="#ffffff" font-family="Arial" font-size="18" font-weight="700">Audit Note</text><text x="1132" y="414" fill="#dbeafe" font-family="Arial" font-size="13">placeholder node</text>
+  <text x="72" y="820" fill="#64748b" font-family="Arial" font-size="15">All node names, endpoints, credentials, and outputs are placeholders.</text>
+</svg>

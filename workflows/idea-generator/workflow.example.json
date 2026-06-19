@@ -1,0 +1,78 @@
+{
+  "name": "Idea Generator Example",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Daily Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "topic",
+              "value": "AI automation for small businesses"
+            }
+          ]
+        }
+      },
+      "id": "set-topic",
+      "name": "Set Topic",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "url": "https://api.example.com/generate",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "Generate 5 practical content ideas about {{$json.topic}}"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.LLM_API_KEY}}"
+            }
+          ]
+        }
+      },
+      "id": "generate-ideas",
+      "name": "Generate Ideas Placeholder API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [480, 0]
+    }
+  ],
+  "connections": {
+    "Daily Schedule": {
+      "main": [[{"node": "Set Topic", "type": "main", "index": 0}]]
+    },
+    "Set Topic": {
+      "main": [[{"node": "Generate Ideas Placeholder API", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "example"
+}

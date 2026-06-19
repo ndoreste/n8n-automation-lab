@@ -1,0 +1,59 @@
+{
+  "name": "Email Alerts Example",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "example-alert",
+        "httpMethod": "POST",
+        "responseMode": "onReceived"
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.severity}}",
+              "operation": "equals",
+              "value2": "high"
+            }
+          ]
+        }
+      },
+      "id": "severity-check",
+      "name": "High Severity?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "fromEmail": "alerts@example.com",
+        "toEmail": "recipient@example.com",
+        "subject": "Example alert: {{$json.title}}",
+        "text": "A high severity event was received. Details: {{$json.description}}"
+      },
+      "id": "send-email",
+      "name": "Send Email Placeholder",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [480, 0]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [[{"node": "High Severity?", "type": "main", "index": 0}]]
+    },
+    "High Severity?": {
+      "main": [[{"node": "Send Email Placeholder", "type": "main", "index": 0}], []]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "example"
+}

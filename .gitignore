@@ -1,0 +1,39 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*token*
+*secret*
+*password*
+
+# n8n local state / credentials / backups
+.n8n/
+credentials.json
+auth.json
+state.db
+database.sqlite
+sessions/
+backups/
+backup/
+*.backup
+*.bak
+
+# Logs
+*.log
+logs/
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Node/Python caches
+node_modules/
+__pycache__/
+.cache/
+*.env
+!env.example
+*.sqlite
+*.db
