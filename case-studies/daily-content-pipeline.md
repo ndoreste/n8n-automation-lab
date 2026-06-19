@@ -10,6 +10,8 @@ Design an automation workflow that transforms raw ideas into structured content 
 
 A scheduled trigger starts the workflow, loads a sanitized topic list, generates a structured draft through an API node, stores review metadata, and sends a notification for manual approval. Publishing remains a human-controlled step.
 
+![Real anonymized n8n screenshot of the daily content pipeline](../assets/screenshots/daily-content-pipeline.png)
+
 ## Tools used
 
 - n8n

@@ -10,6 +10,8 @@ Explain how n8n workflows were structured for maintainability, security, and por
 
 Workflows are organized by use case, each with a README, an example JSON export, environment placeholders, and security notes. Nodes are named descriptively and secrets are represented only by placeholder credential references.
 
+![Real anonymized n8n screenshot showing workflow design decisions](../assets/screenshots/workflow-design-decisions.png)
+
 ## Tools used
 
 - n8n

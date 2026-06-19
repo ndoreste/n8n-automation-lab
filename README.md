@@ -20,6 +20,16 @@ Show practical automation patterns using n8n concepts:
 ```text
 n8n-automation-lab/
 ├── README.md
+├── assets/
+│   └── screenshots/
+│       ├── daily-content-pipeline.png
+│       ├── gmail-alert-system.png
+│       ├── workflow-design-decisions.png
+│       └── archive/
+├── case-studies/
+│   ├── daily-content-pipeline.md
+│   ├── gmail-alert-system.md
+│   └── workflow-design-decisions.md
 ├── workflows/
 │   ├── idea-generator/
 │   │   ├── README.md
@@ -37,6 +47,16 @@ n8n-automation-lab/
 ├── env.example
 └── .gitignore
 ```
+
+## Screenshots
+
+The screenshots in `assets/screenshots/` are real n8n workflow captures reviewed and anonymized for portfolio use. They do not include emails, credentials, tokens, API keys, private webhook URLs, sensitive IDs, or personal/customer data.
+
+- [Daily Content Pipeline](assets/screenshots/daily-content-pipeline.png)
+- [Gmail Alert System](assets/screenshots/gmail-alert-system.png)
+- [Workflow Design Decisions](assets/screenshots/workflow-design-decisions.png)
+
+Earlier SVG recreations were moved to `assets/screenshots/archive/` and are kept only as backup placeholders.
 
 ## Workflows included
 
@@ -101,4 +121,4 @@ MIT recommended.
 - API-first automations using placeholder credentials and environment-based configuration.
 - Portfolio-safe workflow documentation that shows automation thinking without leaking production data.
 
-See `case-studies/` for anonymized workflow case studies and `assets/screenshots/` for portfolio-safe visual captures.
+See `case-studies/` for anonymized workflow case studies and `assets/screenshots/` for real n8n captures that were reviewed and anonymized for portfolio-safe publication.

@@ -10,6 +10,8 @@ Create a monitoring-style workflow that can send email alerts for important even
 
 A webhook or scheduled trigger receives a sanitized event. The workflow validates severity, formats a safe alert body, and sends it through a placeholder email node. Credentials are referenced by name only and are not included in the exported example.
 
+![Real anonymized n8n screenshot of the alert workflow](../assets/screenshots/gmail-alert-system.png)
+
 ## Tools used
 
 - n8n
