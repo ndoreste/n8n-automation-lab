@@ -7,6 +7,8 @@
 *token*
 *secret*
 *password*
+# El escáner de secretos sí se versiona
+!scripts/check-secrets.mjs
 
 # n8n local state / credentials / backups
 .n8n/

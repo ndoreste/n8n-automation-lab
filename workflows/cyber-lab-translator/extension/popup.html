@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <style>
+    body { width: 340px; margin: 0; background: #07110d; color: #eafff0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; }
+    .wrap { padding: 15px; }
+    h1 { font-size: 17px; color: #37ff8b; margin: 0 0 8px; }
+    p { font-size: 13px; color: #bfead0; line-height: 1.38; }
+    button { width: 100%; border: 0; border-radius: 12px; padding: 12px; font-weight: 900; cursor: pointer; background: linear-gradient(90deg,#37ff8b,#69f7ff); color: #00130a; }
+    button:disabled { opacity: .55; cursor: wait; }
+    #status { margin-top: 10px; font-size: 12px; color: #9bcfaf; white-space: pre-wrap; }
+    .small { font-size: 11px; color: #7ea98d; }
+    code { color: #69f7ff; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Labs → Español técnico</h1>
+    <p>Envía la sala/lab actual de TryHackMe o pwn.college a Ara. Recibirás una versión en castellano manteniendo los tecnicismos en inglés.</p>
+    <button id="send">Traducir lab actual</button>
+    <div id="status"></div>
+    <p class="small">Si solo quieres una tarea/challenge, selecciónala primero. No resuelve labs ni contesta flags.</p>
+    <details id="keyBox">
+      <summary class="small">Clave del webhook</summary>
+      <input id="apiKey" type="password" autocomplete="off" placeholder="Pega aquí la clave X-Ara-Key" style="width:100%;box-sizing:border-box;margin:8px 0;padding:8px;border-radius:8px;border:1px solid #37ff8b;background:#030507;color:#eafff0" />
+      <button id="saveKey">Guardar clave</button>
+    </details>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

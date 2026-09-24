@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Cyber Lab Translator ES Técnico",
+  "version": "2.2.0",
+  "description": "Traduce labs de TryHackMe y pwn.college al castellano manteniendo tecnicismos de ciberseguridad en inglés.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://tryhackme.com/*",
+    "https://*.tryhackme.com/*",
+    "https://pwn.college/*",
+    "https://*.pwn.college/*",
+    "https://n8n.example.com/*"
+  ],
+  "action": {
+    "default_title": "Traducir lab a ES técnico",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}

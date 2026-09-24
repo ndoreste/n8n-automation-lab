@@ -1,0 +1,188 @@
+{
+  "name": "Cyber Lab Translator · Español técnico",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cyber-lab-translator",
+        "responseMode": "responseNode",
+        "options": {},
+        "authentication": "headerAuth"
+      },
+      "id": "cbcdfec0-4067-4db0-8eab-b49a04582f78",
+      "name": "Recibir room desde extensión",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst input = $json.body || $json;\nfunction clean(s){ return String(s ?? '').replace(/\\r/g,'').replace(/[ \\t]+\\n/g,'\\n').replace(/\\n{4,}/g,'\\n\\n\\n').trim(); }\nconst url = clean(input.url || '');\nconst title = clean(input.title || 'TryHackMe Room');\nconst selection = clean(input.selection || '');\nconst visibleText = clean(input.text || input.content || '');\nconst sourceText = selection || visibleText;\nif (!sourceText || sourceText.length < 30) throw new Error('No llegó texto suficiente desde la room. Abre la room, espera a que cargue o selecciona una tarea concreta y vuelve a ejecutar la extensión.');\nconst maxChars = 65000;\nconst clipped = sourceText.slice(0, maxChars);\nconst wasClipped = sourceText.length > maxChars;\nconst prompt = `Eres un traductor técnico para laboratorios de ciberseguridad como TryHackMe y pwn.college.\n\nOBJETIVO:\nCrear una versión en castellano entendible del lab/sala/challenge, manteniendo todos los tecnicismos de ciberseguridad en inglés tal como aparecen en el texto original.\n\nREGLAS OBLIGATORIAS:\n- Traduce al castellano de España las explicaciones, instrucciones y descripciones.\n- Mantén EN INGLÉS y sin modificar tecnicismos como: enumeration, reconnaissance, reverse shell, bind shell, payload, exploit, vulnerability, privilege escalation, hash, brute force, wordlist, flag, CTF, scan, port, service, endpoint, shell, listener, exploit, foothold, pivoting, SQL injection, XSS, SSRF, LFI, RFI, command injection, credentials, token, cookie, session, request, response, header, API, Docker, Linux, Windows, Active Directory, SMB, Kerberos, LDAP, DNS, HTTP, HTTPS, SSH, FTP, Nmap, Gobuster, Burp Suite, Metasploit, Hydra, John, Hashcat, Wireshark y nombres de herramientas.\n- Mantén exactamente comandos, código, rutas, IPs, puertos, hashes, URLs, flags, nombres de ficheros, parámetros y opciones CLI.\n- No resuelvas el lab, sala ni challenge.\n- No respondas preguntas del laboratorio.\n- No inventes pasos, comandos, flags ni soluciones que no estén en el texto original.\n- Si aparece una pregunta tipo “What is...?” o un challenge de pwn.college, tradúcelo pero NO lo contestes ni indiques solución.\n- Añade explicaciones breves en español SOLO para entender conceptos técnicos presentes en el texto; no añadas procedimiento de resolución.\n- Conserva estructura por títulos, tareas, listas y bloques.\n\nFORMATO DE SALIDA:\nDevuelve Markdown limpio en español:\n# ${title}\n\n**Enlace original:** ${url || 'capturado desde navegador'}\n\n## Versión traducida\n...\n\n## Conceptos técnicos mantenidos en inglés\n- Término en inglés: explicación breve en español, solo si aparece en el texto.\n\n## Nota de seguridad\nTraducción educativa. No incluye resolución, flags, exploits añadidos ni respuestas.\n\nCONTENIDO ORIGINAL:\n---\n${clipped}\n---\n${wasClipped ? '\\nNota interna: el texto fue recortado por longitud. Indica al final que puede faltar parte de la room y que el usuario puede seleccionar un bloque concreto para continuar.' : ''}`;\nreturn [{ json: { chatId: $env.TELEGRAM_CHAT_ID, url, title, chars: sourceText.length, wasClipped, prompt } }];\n"
+      },
+      "id": "f20bba4c-4e0f-4b40-b33c-1e0011fa6bc2",
+      "name": "Preparar prompt técnico",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.OPENROUTER_API_KEY}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "HTTP-Referer",
+              "value": "https://n8n.example.com"
+            },
+            {
+              "name": "X-Title",
+              "value": "Cyber Lab Technical Spanish Translator"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"openai/gpt-4o-mini\",\n  \"messages\": [\n    {\"role\": \"system\", \"content\": \"Eres un traductor técnico de ciberseguridad. Traduces al castellano y preservas tecnicismos en inglés. No resuelves laboratorios/challenges ni das flags/respuestas.\"},\n    {\"role\": \"user\", \"content\": {{$json.prompt.toJsonString()}}}\n  ],\n  \"temperature\": 0.05,\n  \"max_tokens\": 8000\n}",
+        "options": {
+          "timeout": 180000
+        }
+      },
+      "id": "277d41c9-9f03-441e-a4dc-9f8111632012",
+      "name": "Traducir manteniendo tecnicismos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst prep = $('Preparar prompt técnico').first().json;\nconst translation = $json.choices?.[0]?.message?.content || $json.body?.choices?.[0]?.message?.content || 'No se pudo extraer la traducción.';\nfunction esc(v){ return String(v ?? '').replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c])); }\nfunction inline(s){ return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\\*\\*([^*]+)\\*\\*/g,'<b>$1</b>'); }\nfunction mdToHtml(md){\n  const lines = String(md).split('\\n');\n  let html = '', inCode = false, code = [];\n  for (const raw of lines) {\n    const line = raw.replace(/\\s+$/,'');\n    if (line.startsWith('```')) { if (!inCode){ inCode=true; code=[]; } else { html += `<pre><code>${esc(code.join('\\n'))}</code></pre>`; inCode=false; } continue; }\n    if (inCode) { code.push(line); continue; }\n    if (/^# /.test(line)) html += `<h1>${inline(line.replace(/^# /,''))}</h1>`;\n    else if (/^## /.test(line)) html += `<h2>${inline(line.replace(/^## /,''))}</h2>`;\n    else if (/^### /.test(line)) html += `<h3>${inline(line.replace(/^### /,''))}</h3>`;\n    else if (/^[-*] /.test(line)) html += `<li>${inline(line.replace(/^[-*] /,''))}</li>`;\n    else if (/^\\d+\\. /.test(line)) html += `<li>${inline(line.replace(/^\\d+\\. /,''))}</li>`;\n    else if (!line.trim()) html += '<br>';\n    else html += `<p>${inline(line)}</p>`;\n  }\n  if (inCode) html += `<pre><code>${esc(code.join('\\n'))}</code></pre>`;\n  return html;\n}\nconst now = new Date().toISOString().replace(/[:.]/g,'-').slice(0,19);\nconst safeTitle = String(prep.title || 'tryhackme-room').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,70) || 'tryhackme-room';\nconst fileName = `cyber-lab-es-tecnico-${safeTitle}-${now}.html`;\nconst html = `<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>${esc(prep.title)} · Lab ES técnico</title><style>\n:root{--bg:#06100b;--panel:#0b1811;--text:#eafff0;--muted:#9bcfaf;--green:#37ff8b;--cyan:#69f7ff;--line:rgba(55,255,139,.35)}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,rgba(55,255,139,.12),transparent 26%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.62}.wrap{max-width:980px;margin:auto;padding:18px}.card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(11,24,17,.98),rgba(3,8,5,.98));border-radius:20px;padding:20px;box-shadow:0 18px 60px rgba(0,0,0,.35)}.meta{color:var(--muted);font-size:14px;border-bottom:1px dashed var(--line);padding-bottom:12px}h1,h2,h3{color:var(--green);line-height:1.18}h1{font-size:clamp(28px,6vw,48px)}h2{margin-top:28px}a{color:var(--cyan)}code,pre{background:#020403;border:1px solid #214d34;border-radius:8px;color:#dcffe8}code{padding:2px 5px}pre{overflow:auto;padding:12px}li{margin:6px 0}.warn{border-left:4px solid #ffd166;background:#251f0b;color:#ffe7a6;padding:10px 12px;border-radius:10px;margin:12px 0}.footer{color:var(--muted);font-size:12px;margin-top:22px}</style></head><body><main class=\"wrap\"><section class=\"card\"><p class=\"meta\"><b>Cyber Lab Translator</b> · castellano con tecnicismos en inglés · no resuelve labs/challenges<br><b>URL:</b> ${esc(prep.url || 'capturada desde navegador')}<br><b>Caracteres capturados:</b> ${esc(prep.chars)}</p>${prep.wasClipped ? '<div class=\"warn\">La room era larga y se tradujo la primera parte capturada. Selecciona un bloque concreto para continuar con el resto.</div>' : ''}${mdToHtml(translation)}<p class=\"footer\">Generado por Ara/Hermes vía n8n · Traducción educativa sin resolución, flags ni respuestas añadidas.</p></section></main></body></html>`;\nreturn [{ json: { chatId: prep.chatId, fileName, caption: `Lab traducido al español técnico: ${prep.title}`.slice(0,1000), ok:true, title:prep.title, url:prep.url }, binary: { data: { data: Buffer.from(html,'utf8').toString('base64'), mimeType:'text/html', fileName, fileExtension:'html' } } }];\n"
+      },
+      "id": "d2c724d5-dc91-4a07-8259-9512b7197ad0",
+      "name": "Preparar HTML español técnico",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendDocument",
+        "chatId": "={{$json.chatId}}",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "additionalFields": {
+          "caption": "={{$json.caption}}",
+          "fileName": "={{$json.fileName}}",
+          "disable_notification": false
+        }
+      },
+      "id": "a0d21d36-f8b7-4533-ade7-0a76ea747816",
+      "name": "Enviar versión traducida por Ara",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"ok\": true,\n  \"message\": \"Versión traducida enviada por Ara/Telegram\"\n}",
+        "options": {}
+      },
+      "id": "047a8e94-8dc5-41fc-834f-ec4d65d774a5",
+      "name": "Responder a extensión",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1360,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Recibir room desde extensión": {
+      "main": [
+        [
+          {
+            "node": "Preparar prompt técnico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar prompt técnico": {
+      "main": [
+        [
+          {
+            "node": "Traducir manteniendo tecnicismos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Traducir manteniendo tecnicismos": {
+      "main": [
+        [
+          {
+            "node": "Preparar HTML español técnico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar HTML español técnico": {
+      "main": [
+        [
+          {
+            "node": "Enviar versión traducida por Ara",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar versión traducida por Ara": {
+      "main": [
+        [
+          {
+            "node": "Responder a extensión",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

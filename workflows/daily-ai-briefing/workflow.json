@@ -1,0 +1,473 @@
+{
+  "name": "AUT-003 · Daily AI Briefing",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "AUT-003 es un informe diario independiente de inteligencia artificial en español. Mantiene fuentes/horario/lógica, prioriza creadores y añade papers recientes de IA desde arXiv. Envía solo un HTML final autocontenido por Telegram/Ara. Diseño tech hacker móvil, sin Matrix/canvas/ZIP y sin nodo de aviso simple.",
+        "height": 180,
+        "width": 520
+      },
+      "id": "f3a768ee-4d1d-462d-a8e3-eaa58c692724",
+      "name": "DOCUMENTACIÓN — Ara Daily AI Watch",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -860,
+        -420
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "id": "4776525d-ee7d-4851-8f85-2b02f4d467a0",
+      "name": "Disparador diario 08:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -760,
+        -120
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "70114610-8015-4266-bf2a-4480adb70830",
+      "name": "Probar manualmente",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -760,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst today = new Date().toISOString().slice(0,10);\nconst hora = new Date().toLocaleTimeString('es-ES', {timeZone:'Atlantic/Canary', hour:'2-digit', minute:'2-digit'});\nconst gn = q => `https://news.google.com/rss/search?q=${encodeURIComponent(q + ' when:7d')}&hl=es&gl=ES&ceid=ES:es`;\nconst ax = q => `https://export.arxiv.org/api/query?search_query=${encodeURIComponent(q)}&sortBy=submittedDate&sortOrder=descending&max_results=12`;\nreturn [{ json: {\n  today,\n  hora,\n  chatId: $env.TELEGRAM_CHAT_ID,\n  title: 'Ara Daily AI Watch',\n  focusKeywords: ['nuevos modelos IA','agentes IA','automatización','MCP','n8n','OpenAI','Anthropic','Google Gemini','Claude','Perplexity','Cursor','Windsurf','Lovable','Bolt','GitHub Copilot','OpenRouter','Ollama','Llama','Qwen','DeepSeek','Mistral','ElevenLabs','Runway','Kling','Veo','Midjourney','Stable Diffusion','Flux','ComfyUI','APIs','productividad','empresas adoptan IA','casos de uso','comparativas','tutoriales','tendencias','cursos gratuitos IA','bootcamps gratuitos','formación gratis','becas tecnología'],\n  sources: [\n    {kind:'blog', name:'Vekai', candidates:['https://vekai.co/blog/feed/','https://vekai.co/blog/', gn('site:vekai.co inteligencia artificial OR IA OR automatización')]},\n    {kind:'blog', name:'Extra Software', candidates:['https://www.extrasoft.es/feed/','https://www.extrasoft.es/blog/', gn('site:extrasoft.es inteligencia artificial OR IA')]},\n    {kind:'blog', name:'AWS Español', candidates:['https://aws.amazon.com/es/blogs/aws-spanish/feed/','https://aws.amazon.com/es/blogs/machine-learning/feed/', gn('site:aws.amazon.com/es/blogs inteligencia artificial AWS español')]},\n    {kind:'blog', name:'Hiberus', candidates:['https://www.hiberus.com/crecemos-contigo/feed/','https://www.hiberus.com/crecemos-contigo/category/inteligencia-artificial/feed/','https://www.hiberus.com/crecemos-contigo/']},\n    {kind:'blog', name:'IASolver', candidates:['https://iasolver.es/feed/','https://iasolver.es/blog/feed/','https://iasolver.es/blog/']},\n    {kind:'blog', name:'UOC', candidates:['https://blogs.uoc.edu/informatica/es/category/inteligencia-artificial/feed/','https://blogs.uoc.edu/informatica/es/feed/', gn('site:blogs.uoc.edu inteligencia artificial')]},\n    {kind:'blog', name:'IA General', candidates:[gn('IA General inteligencia artificial español'), gn('inteligencia artificial nuevos modelos herramientas español')]},\n    {kind:'blog', name:'Jon Hernández Blog', candidates:[gn('\\\"Jon Hernández\\\" inteligencia artificial automatización blog'), gn('\\\"Jon Hernandez\\\" inteligencia artificial automatización blog'), gn('site:jonhernandez inteligencia artificial automatización blog')]},\n\n    {kind:'blog', name:'Benjamin Cordero', candidates:[gn('\\\"Benjamin Cordero\\\" inteligencia artificial OR IA OR automatización OR agentes'), gn('\\\"Benjamin Cordero\\\" modelos IA OR LLM OR agentes OR automatización'), gn('site:linkedin.com/in/\\\"Benjamin Cordero\\\" inteligencia artificial OR IA')]},\n\n    {kind:'blog', name:'Chema Alonso', candidates:[gn('site:chemaalonso.es inteligencia artificial OR IA OR automatización OR agentes'), 'https://chemaalonso.es', 'https://www.chemaalonso.es']},\n    {kind:'blog', name:'Security By Default', candidates:[gn('site:securitybydefault.com inteligencia artificial OR IA OR automatización OR ciberseguridad'), 'https://www.securitybydefault.com/feed/', 'https://www.securitybydefault.com']},\n    {kind:'blog', name:'El Blog de Angelucho', candidates:[gn('\"El Blog de Angelucho\" inteligencia artificial OR IA OR automatización OR ciberseguridad'), gn('Angelucho inteligencia artificial OR IA OR automatización OR ciberseguridad')]},\n    {kind:'blog', name:'HackPlayers', candidates:[gn('site:hackplayers.com inteligencia artificial OR IA OR automatización OR ciberseguridad'), 'https://www.hackplayers.com', 'https://www.hackplayers.com/feeds/posts/default']},\n    {kind:'blog', name:'Flu Project', candidates:[gn('site:flu-project.com inteligencia artificial OR IA OR automatización OR ciberseguridad'), 'https://flu-project.com', 'https://www.flu-project.com']},\n    {kind:'blog', name:'DragonJAR', candidates:[gn('site:dragonjar.org inteligencia artificial OR IA OR automatización OR ciberseguridad'), 'https://www.dragonjar.org/feed/', 'https://www.dragonjar.org']},\n    {kind:'blog', name:'Criptored', candidates:[gn('site:criptored.upm.es inteligencia artificial OR IA OR automatización OR criptografía'), 'https://www.criptored.upm.es']},\n    {kind:'blog', name:'Hackpuntes', candidates:[gn('site:hackpuntes.com inteligencia artificial OR IA OR automatización OR ciberseguridad'), 'https://hackpuntes.com', 'https://www.hackpuntes.com']},\n    {kind:'blog', name:'Cyberhades', candidates:[gn('site:cyberhades.com inteligencia artificial OR IA OR automatización OR ciberseguridad'), 'https://www.cyberhades.com', 'https://cyberhades.com']},\n    {kind:'blog', name:'Un informático en el lado del mal', candidates:[gn('site:elladodelmal.com inteligencia artificial OR IA OR automatización OR ciberseguridad'), 'https://www.elladodelmal.com/feeds/posts/default', 'https://www.elladodelmal.com']},\n    {kind:'blog', name:'Xataka IA', candidates:['https://www.xataka.com/tag/inteligencia-artificial','https://www.xataka.com/tag/ia', gn('site:xataka.com inteligencia artificial IA')]},\n    {kind:'blog', name:'Genbeta IA', candidates:['https://www.genbeta.com/tag/inteligencia-artificial', gn('site:genbeta.com inteligencia artificial IA')]},\n    {kind:'blog', name:'MuyComputer IA', candidates:['https://www.muycomputer.com/tag/inteligencia-artificial/', gn('site:muycomputer.com inteligencia artificial')]},\n    {kind:'blog', name:'ComputerHoy IA', candidates:['https://computerhoy.com/inteligencia-artificial', gn('site:computerhoy.com inteligencia artificial')]},\n    {kind:'blog', name:'Silicon España', candidates:['https://www.silicon.es', gn('site:silicon.es inteligencia artificial IA')]},\n    {kind:'blog', name:'MuyPymes IA', candidates:['https://www.muypymes.com', gn('site:muypymes.com inteligencia artificial IA')]},\n    {kind:'blog', name:'OpenExpo News', candidates:['https://openexpoeurope.com/es/blog/', gn('site:openexpoeurope.com inteligencia artificial IA')]},\n    {kind:'blog', name:'Innovación Digital', candidates:[gn('Innovación Digital inteligencia artificial IA España')]},\n    {kind:'blog', name:'Tecnología para los Negocios', candidates:[gn('Tecnología para los Negocios inteligencia artificial IA España')]},\n    {kind:'blog', name:'IT User', candidates:['https://www.ituser.es/', gn('site:ituser.es inteligencia artificial IA')]},\n    {kind:'blog', name:'Byte TI', candidates:['https://www.byteti.com/','https://www.byte.es/', gn('site:byte.es inteligencia artificial IA')]},\n    {kind:'blog', name:'Dir&Ge', candidates:['https://directivosygerentes.es/', gn('site:directivosygerentes.es inteligencia artificial IA')]},\n    {kind:'blog', name:'BigData Magazine', candidates:['https://bigdatamagazine.es/', gn('site:bigdatamagazine.es inteligencia artificial IA')]},\n    {kind:'blog', name:'AI Network España', candidates:[gn('AI Network España inteligencia artificial')]},\n    {kind:'blog', name:'Thinking for Innovation', candidates:['https://www.iebschool.com/blog/', gn('site:iebschool.com inteligencia artificial')]},\n    {kind:'blog', name:'Plain Concepts Blog', candidates:['https://www.plainconcepts.com/es/blog/','https://www.plainconcepts.com/blog/', gn('site:plainconcepts.com inteligencia artificial IA')]},\n    {kind:'blog', name:'Sngular Blog', candidates:['https://www.sngular.com/es/blog/','https://www.sngular.com/insights','https://www.sngular.com/blog', gn('site:sngular.com inteligencia artificial IA')]},\n    {kind:'blog', name:'Paradigma Digital', candidates:['https://www.paradigmadigital.com/dev/', gn('site:paradigmadigital.com inteligencia artificial IA')]},\n    {kind:'blog', name:'Accenture España Insights', candidates:['https://www.accenture.com/es-es/insights/artificial-intelligence-index', gn('site:accenture.com/es-es inteligencia artificial generativa')]},\n    {kind:'blog', name:'Telefónica Tech Blog', candidates:['https://telefonicatech.com/blog', gn('site:telefonicatech.com inteligencia artificial IA')]},\n    {kind:'blog', name:'Microsoft España Blog IA', candidates:['https://news.microsoft.com/es-es/', gn('site:news.microsoft.com/es-es inteligencia artificial Microsoft España'), gn('site:microsoft.com/es-es inteligencia artificial copilot')]},\n    {kind:'blog', name:'Google Cloud España', candidates:['https://cloud.google.com/blog/es', gn('site:cloud.google.com/blog/es inteligencia artificial Google Cloud'), gn('site:cloud.google.com/blog/products/ai-machine-learning español')]},\n    {kind:'blog', name:'IBM España', candidates:['https://www.ibm.com/es-es/blogs/', gn('site:ibm.com/es-es inteligencia artificial IA')]},\n    {kind:'blog', name:'Oracle España', candidates:['https://www.oracle.com/es/news/', gn('site:oracle.com/es inteligencia artificial IA')]},\n    {kind:'blog', name:'SAP España', candidates:['https://news.sap.com/spain/', gn('site:sap.com/spain inteligencia artificial IA')]},\n    {kind:'blog', name:'OpenWebinars Blog', candidates:['https://openwebinars.net/blog/', gn('site:openwebinars.net inteligencia artificial IA')]},\n    {kind:'blog', name:'KeepCoding Blog', candidates:['https://keepcoding.io/blog/', gn('site:keepcoding.io inteligencia artificial IA')]},\n    {kind:'blog', name:'Código Facilito Blog', candidates:['https://codigofacilito.com/articulos', gn('site:codigofacilito.com inteligencia artificial IA')]},\n\n    // Fuentes para #cursos-gratuitos: cursos, bootcamps, becas y recursos formativos gratuitos\n    {kind:'blog', name:'MoureDev — cursos y retos', candidates:['https://mouredev.com','https://retosdeprogramacion.com', gn('site:mouredev.com curso gratis OR bootcamp OR inteligencia artificial OR programación'), gn('site:retosdeprogramacion.com curso gratis OR programación')]},\n    {kind:'blog', name:'midudev — cursos y recursos', candidates:['https://midu.dev','https://www.youtube.com/@midudev', gn('midudev curso gratis bootcamp programación inteligencia artificial')]},\n    {kind:'blog', name:'freeCodeCamp Español', candidates:['https://www.freecodecamp.org/espanol/news/','https://www.freecodecamp.org/news/tag/espanol/', gn('site:freecodecamp.org/espanol curso gratis inteligencia artificial programación')]},\n    {kind:'blog', name:'Google Actívate', candidates:['https://grow.google/intl/es/courses-and-tools/','https://learndigital.withgoogle.com/activate', gn('Google Actívate curso gratuito inteligencia artificial programación')]},\n    {kind:'blog', name:'Microsoft Learn', candidates:['https://learn.microsoft.com/es-es/training/browse/?terms=ai','https://learn.microsoft.com/es-es/ai/', gn('site:learn.microsoft.com/es-es curso gratuito inteligencia artificial Microsoft Learn')]},\n    {kind:'blog', name:'AWS Skill Builder', candidates:['https://skillbuilder.aws/search?searchText=machine%20learning','https://aws.amazon.com/es/training/', gn('AWS Skill Builder curso gratuito inteligencia artificial machine learning español')]},\n    {kind:'blog', name:'Kaggle Learn', candidates:['https://www.kaggle.com/learn','https://www.kaggle.com/learn/intro-to-machine-learning', gn('Kaggle Learn curso gratuito machine learning IA')]},\n    {kind:'blog', name:'OpenWebinars cursos gratis', candidates:['https://openwebinars.net/blog/', gn('site:openwebinars.net cursos gratis inteligencia artificial programación')]},\n    {kind:'blog', name:'Coursera IA gratis', candidates:[gn('Coursera curso gratis inteligencia artificial español'), gn('Coursera free course artificial intelligence machine learning')]},\n    {kind:'blog', name:'edX IA gratis', candidates:[gn('edX curso gratis inteligencia artificial español'), gn('edX free course artificial intelligence machine learning')]},\n    {kind:'blog', name:'Styde', candidates:['https://styde.net/', gn('site:styde.net inteligencia artificial IA programación')]},\n    {kind:'blog', name:'Adictos al Trabajo', candidates:['https://www.adictosaltrabajo.com/', gn('site:adictosaltrabajo.com inteligencia artificial IA')]},\n    {kind:'blog', name:'Autentia', candidates:['https://www.autentia.com/blog/', gn('site:autentia.com inteligencia artificial IA')]},\n    {kind:'blog', name:'Sherpa.ai', candidates:['https://sherpa.ai/es/blog/','https://sherpa.ai/blog/', gn('site:sherpa.ai inteligencia artificial IA')]},\n    {kind:'blog', name:'Narrativa', candidates:['https://www.narrativa.com/es/blog/','https://www.narrativa.com/blog/', gn('site:narrativa.com inteligencia artificial IA')]},\n    {kind:'blog', name:'NTT DATA España IA', candidates:['https://es.nttdata.com/insights/blog', gn('site:es.nttdata.com inteligencia artificial IA'), gn('site:nttdata.com/es inteligencia artificial')]},\n    {kind:'blog', name:'Minsait', candidates:['https://www.minsait.com/es/blog', gn('site:minsait.com inteligencia artificial IA')]},\n\n    {kind:'blog', name:'arXiv IA reciente', candidates:[ax('cat:cs.AI'), ax('all:artificial intelligence')]},\n    {kind:'blog', name:'arXiv Machine Learning reciente', candidates:[ax('cat:cs.LG'), ax('cat:stat.ML')]},\n    {kind:'blog', name:'arXiv LLM y NLP reciente', candidates:[ax('cat:cs.CL'), ax('all:large language models')]},\n    {kind:'blog', name:'arXiv Agentes IA reciente', candidates:[ax('all:LLM agents'), ax('all:AI agents')]},\n    {kind:'blog', name:'arXiv Multimodal y Visión reciente', candidates:[ax('cat:cs.CV'), ax('all:multimodal foundation model')]},\n    {kind:'blog', name:'arXiv Razonamiento y RL reciente', candidates:[ax('all:reasoning large language models'), ax('all:reinforcement learning language model')]},\n    {kind:'blog', name:'arXiv Modelos generativos reciente', candidates:[ax('all:generative AI'), ax('all:diffusion model')]},\n    {kind:'blog', name:'arXiv Tool Use y MCP reciente', candidates:[ax('all:tool use language models'), ax('all:model context protocol')]},\n\n    {kind:'youtube', name:'Pablo Álvarez / maxmaxdata', query:'Pablo Álvarez maxmaxdata inteligencia artificial YouTube', handles:['@maxmaxdata']},\n    {kind:'youtube', name:'Manuel Murcia', query:'Manuel Murcia inteligencia artificial automatización YouTube', handles:['@manuelmurcia','@ManuelMurcia']},\n    {kind:'youtube', name:'DotCSV', query:'DotCSV inteligencia artificial YouTube', handles:['@DotCSV']},\n\n    {kind:'youtube', name:'Chema Alonso', query:'Chema Alonso inteligencia artificial ciberseguridad YouTube', handles:[]},\n    {kind:'youtube', name:'Rafa Hacker', query:'Rafa Hacker ciberseguridad YouTube', handles:[]},\n    {kind:'youtube', name:'HackerCar', query:'HackerCar ciberseguridad YouTube', handles:[]},\n    {kind:'youtube', name:'Security Inside', query:'Security Inside ciberseguridad YouTube', handles:[]},\n    {kind:'youtube', name:'Informático V', query:'Informático V tecnología ciberseguridad YouTube', handles:[]},\n    {kind:'youtube', name:'Jon Hernández', query:'Jon Hernández IA YouTube', handles:['@jonhernandez','@JonHernandez','@jonhernandez_ia']},\n    {kind:'youtube', name:'Xavier Mitjana', query:'Xavier Mitjana IA YouTube', handles:['@XavierMitjana','@xaviermitjana']},\n    {kind:'youtube', name:'SALVAJE', query:'SALVAJE IA YouTube', handles:['@SALVAJE','@salvaje','@salvajeia']},\n    {kind:'youtube', name:'Draive.ai', query:'Draive.ai YouTube', handles:['@draiveai','@DraiveAI','@draive.ai']},\n    {kind:'youtube', name:'Nate Gentile', query:'Nate Gentile inteligencia artificial YouTube', handles:['@NateGentile','@nategentile']},\n    {kind:'youtube', name:'MoureDev', query:'MoureDev inteligencia artificial programación YouTube', handles:['@mouredev','@MoureDev']},\n    {kind:'youtube', name:'Juan Merodio', query:'Juan Merodio inteligencia artificial marketing YouTube', handles:['@JuanMerodio','@juanmerodio']},\n    {kind:'youtube', name:'Javi López', query:'Javi López inteligencia artificial YouTube', handles:['@javilop','@JaviLopez','@javilopez']},\n    {kind:'youtube', name:'Sergio Alejandro Campos', query:'Sergio Alejandro Campos inteligencia artificial YouTube', handles:['@sergioalejandrocampos','@SergioAlejandroCampos']},\n    {kind:'youtube', name:'Álvaro Torres', query:'Álvaro Torres inteligencia artificial YouTube', handles:['@alvarotorres','@AlvaroTorres']},\n    {kind:'youtube', name:'Escuela de IA', query:'Escuela de IA inteligencia artificial YouTube', handles:['@EscueladeIA','@escueladeia']},\n    {kind:'youtube', name:'Píldoras Informáticas', query:'Píldoras Informáticas inteligencia artificial YouTube', handles:['@pildorasinformaticas','@PildorasInformaticas']},\n    {kind:'youtube', name:'OpenExpo Europe', query:'OpenExpo Europe inteligencia artificial YouTube', handles:['@OpenExpo','@openexpoeurope','@OpenExpoEurope']},\n    {kind:'youtube', name:'KeepCoding', query:'KeepCoding inteligencia artificial YouTube', handles:['@KeepCoding','@keepcoding']},\n    {kind:'youtube', name:'Código Facilito IA', query:'Código Facilito inteligencia artificial YouTube', handles:['@codigofacilito','@CodigoFacilito']},\n    {kind:'youtube', name:'Midudev', query:'Midudev inteligencia artificial YouTube', handles:['@midudev','@Midudev']},\n    {kind:'youtube', name:'Programador X', query:'Programador X inteligencia artificial YouTube', handles:['@programadorx','@ProgramadorX']},\n    {kind:'youtube', name:'IA Hoy', query:'IA Hoy inteligencia artificial YouTube', handles:['@iahoy','@IAHoy']},\n    {kind:'youtube', name:'IA Pro', query:'IA Pro inteligencia artificial YouTube', handles:['@iapro','@IAPro']},\n    {kind:'youtube', name:'Inteligencia Artificial 360', query:'Inteligencia Artificial 360 YouTube', handles:['@inteligenciaartificial360','@InteligenciaArtificial360']}\n  ]\n}}];\n"
+      },
+      "id": "cc2a6c6f-a237-4105-88b9-3eda4e198a49",
+      "name": "Configurar fuentes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst cfg = $json;\nconst out = [];\nconst status = [];\nconst dedupeState = $getWorkflowStaticData('global');\nconst historyWindowDays = 14;\nconst historyEntries = Array.isArray(dedupeState.historyEntries) ? dedupeState.historyEntries : [];\nconst cutoffMs = Date.now() - (historyWindowDays * 24 * 60 * 60 * 1000);\nconst recentHistory = historyEntries.filter(entry => {\n  if (!entry || !entry.date) return false;\n  const ts = Date.parse(entry.date);\n  return Number.isFinite(ts) && ts >= cutoffMs;\n});\nconst previousSentKeys = new Set(recentHistory.flatMap(entry => Array.isArray(entry.keys) ? entry.keys : []));\nconst previousSentTitles = new Set(recentHistory.flatMap(entry => Array.isArray(entry.titles) ? entry.titles : []));\nconst UA = 'AraDailyAIWatch/2.0 (+n8n; Spanish AI radar)';\nconst includeRe = /(\\bIA\\b|inteligencia artificial|AI\\b|machine learning|aprendizaje automático|automatiz|agente|agentic|MCP\\b|n8n|OpenAI|Anthropic|Gemini|Claude|Perplexity|Cursor|Windsurf|Lovable|Bolt|Copilot|OpenRouter|Ollama|Llama|Qwen|DeepSeek|Mistral|ElevenLabs|Runway|Kling|Veo\\b|Midjourney|Stable Diffusion|Flux|ComfyUI|API|productividad|caso de uso|tutorial|comparativa|curso|gratis|gratuito|bootcamp|beca|formación|formacion|aprender|learn|modelo generativo|generativa|negocio|empresa)/i;\nconst badRe = /(sorteo|oferta|black friday|cupón|review gaming|smartphone|móvil|televisor|auriculares|tarifa|criptomoneda|fútbol)/i;\nasync function get(url) {\n  try { return await this.helpers.httpRequest({method:'GET', url, headers:{'User-Agent':UA, 'Accept':'text/html,application/rss+xml,application/atom+xml,application/xml,text/xml,*/*'}, timeout:10000}); }\n  catch (e) { return {__error: e.message}; }\n}\nfunction asText(x){ return typeof x === 'string' ? x : (x && x.__error ? '' : JSON.stringify(x||'')); }\nfunction clean(s){ return String(s||'').replace(/<!\\[CDATA\\[/g,'').replace(/\\]\\]>/g,'').replace(/<script[\\s\\S]*?<\\/script>/gi,' ').replace(/<style[\\s\\S]*?<\\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&amp;/g,'&').replace(/&quot;/g,'\"').replace(/&#39;/g,\"'\").replace(/&nbsp;/g,' ').replace(/\\s+/g,' ').trim(); }\nfunction norm(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/https?:\\/\\/\\S+/g,'').replace(/[^a-z0-9]+/g,' ').trim().slice(0,120); }\nfunction canonicalUrl(url){\n  return String(url||'').trim().toLowerCase().replace(/[?#].*$/,'').replace(/\\/$/,'');\n}\nfunction signalKey(x){\n  const keyUrl = canonicalUrl(x.url||'');\n  const keyTitle = norm(x.title||x.titular||x.nombre||'');\n  return keyUrl ? `u:${keyUrl}` : `t:${keyTitle}`;\n}\nfunction relevant(x){ const hay=[x.title,x.url,x.summary,x.source].join(' '); return includeRe.test(hay) && !badRe.test(hay) && !/\\b(2019|2020|2021|2022|2023)\\b/.test(hay); }\nfunction dedupePush(x){\n  x.title=clean(x.title); x.summary=clean(x.summary||''); x.url=clean(x.url); x.source=clean(x.source);\n  if (!x.title || x.title.length < 6) return;\n  if (!relevant(x)) return;\n  const keyUrl=canonicalUrl(x.url||'');\n  const keyTitle=norm(x.title);\n  const existing=out.find(i => (keyUrl && (i.url||'').toLowerCase().replace(/[?#].*$/,'')===keyUrl) || norm(i.title)===keyTitle);\n  if (existing) { if (!existing.supportingSources) existing.supportingSources=[existing.source]; if (!existing.supportingSources.includes(x.source)) existing.supportingSources.push(x.source); return; }\n  x.supportingSources=[x.source];\n  out.push(x);\n}\nfunction parseFeed(txt, source){\n  let n=0;\n  const items=[...txt.matchAll(/<item[\\s\\S]*?<title[^>]*>([\\s\\S]*?)<\\/title>[\\s\\S]*?(?:<link[^>]*>([\\s\\S]*?)<\\/link>|<guid[^>]*>([\\s\\S]*?)<\\/guid>)[\\s\\S]*?(?:<description[^>]*>([\\s\\S]*?)<\\/description>)?[\\s\\S]*?(?:<pubDate[^>]*>([\\s\\S]*?)<\\/pubDate>)?[\\s\\S]*?<\\/item>/gi)];\n  for (const m of items.slice(0,10)) { const before=out.length; dedupePush({type:'blog', source, title:m[1], url:m[2]||m[3], summary:m[4]||'', published:m[5]||'', signal:'rss'}); if(out.length>before)n++; }\n  const entries=[...txt.matchAll(/<entry[\\s\\S]*?<title[^>]*>([\\s\\S]*?)<\\/title>[\\s\\S]*?<link[^>]*href=[\"']([^\"']+)[\"'][\\s\\S]*?(?:<summary[^>]*>([\\s\\S]*?)<\\/summary>|<content[^>]*>([\\s\\S]*?)<\\/content>)?[\\s\\S]*?(?:<updated[^>]*>([\\s\\S]*?)<\\/updated>|<published[^>]*>([\\s\\S]*?)<\\/published>)?[\\s\\S]*?<\\/entry>/gi)];\n  for (const m of entries.slice(0,10)) { const before=out.length; dedupePush({type:'blog', source, title:m[1], url:m[2], summary:m[3]||m[4]||'', published:m[5]||m[6]||'', signal:'atom'}); if(out.length>before)n++; }\n  return n;\n}\nfunction parseHtml(txt, source, base){\n  let n=0;\n  const matches=[...txt.matchAll(/<a\\s+[^>]*href=[\"']([^\"']+)[\"'][^>]*>([\\s\\S]*?)<\\/a>/gi)];\n  for (const m of matches) {\n    const title=clean(m[2]); let url=clean(m[1]);\n    if (!title || title.length<15) continue;\n    if (url.startsWith('/')) { try { url = new URL(url, base).href; } catch {} }\n    if (!/^https?:/.test(url)) continue;\n    const before=out.length; dedupePush({type:'blog', source, title, url, published:'', summary:'', signal:'html'});\n    if (out.length>before) n++;\n    if (n>=6) break;\n  }\n  return n;\n}\nasync function collectBlog(src){\n  let found=0, last='';\n  for (const url of (src.candidates||[]).slice(0,3)) {\n    const r=await get(url); if (r.__error) { last = r.__error; continue; }\n    const txt=asText(r);\n    found += parseFeed(txt, src.name);\n    if (!found) found += parseHtml(txt, src.name, url);\n    if (found) { status.push(`${src.name}: ${found} señales relevantes (${url})`); return; }\n  }\n  status.push(`${src.name}: sin señales relevantes (${last||'sin feed/html útil'})`);\n}\nfunction channelIdFromPage(txt){\n  const pats=[/\"channelId\":\"(UC[^\"]+)\"/, /\"externalId\":\"(UC[^\"]+)\"/, /<meta itemprop=\"channelId\" content=\"(UC[^\"]+)\"/];\n  for (const p of pats){ const m=txt.match(p); if(m) return m[1]; }\n  return '';\n}\nasync function resolveChannel(src){\n  for (const h of (src.handles||[]).slice(0,2)) {\n    const r=await get(`https://www.youtube.com/${h}`); if (!r.__error) { const id=channelIdFromPage(asText(r)); if (id) return id; }\n  }\n  const search=await get(`https://www.youtube.com/results?search_query=${encodeURIComponent(src.query)}`);\n  if (!search.__error) {\n    const txt=asText(search);\n    const id=channelIdFromPage(txt); if (id) return id;\n    const m=txt.match(/\"channelRenderer\":\\{\"channelId\":\"(UC[^\"]+)\"/); if (m) return m[1];\n  }\n  return '';\n}\nasync function collectYoutube(src){\n  const id=await resolveChannel(src);\n  if (!id) { status.push(`${src.name}: no se pudo resolver canal YouTube`); return; }\n  const feed=`https://www.youtube.com/feeds/videos.xml?channel_id=${id}`;\n  const r=await get(feed);\n  if (r.__error) { status.push(`${src.name}: error feed YouTube ${r.__error}`); return; }\n  const before=out.length;\n  const txt=asText(r);\n  const entries=[...txt.matchAll(/<entry>[\\s\\S]*?<title>([\\s\\S]*?)<\\/title>[\\s\\S]*?<link rel=\"alternate\" href=\"([^\"]+)\"[\\s\\S]*?<published>([\\s\\S]*?)<\\/published>[\\s\\S]*?<\\/entry>/g)];\n  for (const m of entries.slice(0,10)) dedupePush({type:'youtube', source:src.name, title:m[1], url:m[2], published:m[3], summary:'', signal:'video'});\n  status.push(`${src.name}: ${out.length-before} vídeos relevantes (${id})`);\n}\nfor (const src of cfg.sources) { if (src.kind === 'youtube') await collectYoutube(src); else await collectBlog(src); }\nconst sorted = [...out].sort((a,b)=> (b.type==='youtube')-(a.type==='youtube') || String(b.published||'').localeCompare(String(a.published||'')));\nconst fresh = [];\nconst repeated = [];\nfor (const item of sorted) {\n  const key = signalKey(item);\n  const titleKey = norm(item.title||'');\n  if ((key && previousSentKeys.has(key)) || (titleKey && previousSentTitles.has(titleKey))) repeated.push(item);\n  else fresh.push(item);\n}\nif (previousSentKeys.size || previousSentTitles.size) status.unshift(`Dedupe anterior: ${repeated.length} señales descartadas por salir en el blog anterior`);\nconst top = fresh.slice(0,160);\nconst sourceNames = cfg.sources.map(s => s.name);\nconst discardedSample = repeated.slice(0,12).map(x => x.title);\nconst prompt = `Eres Ara, asistente editorial de Nau. Convierte estas señales en un informe diario independiente de inteligencia artificial en español. Calidad sobre cantidad, pero con más noticias y foco reforzado en canales/creadores/influencers, y añade una sección diaria de papers recientes de IA que merezca revisar.\\n\\nObjetivo: detectar noticias relevantes de IA, nuevas herramientas, modelos nuevos o actualizaciones importantes, tendencias en automatización, agentes IA, productividad, creación de contenido y negocio, y oportunidades accionables para entender el ecosistema de IA.\\n\\nTemas válidos: ${cfg.focusKeywords.join(', ')}.\\n\\nFiltro estricto:\\n- Elimina noticias repetidas, clickbait, IA demasiado básica, noticias antiguas y contenido sin fuente fiable.\\n- Si varias fuentes hablan de la misma noticia, genera una sola entrada e indica todas las fuentes que la respaldan.\\n- Los rumores solo se aceptan si son relevantes y deben marcarse como \\\"no confirmado\\\".\\n- Prioriza utilidad, claridad y relevancia para una lectura profesional diaria.\\n- Estas señales ya enviadas en el blog anterior se han filtrado antes de llegar a ti: no las reintroduzcas, no las reformules y no rellenes huecos con noticias repetidas.\\n- Si tras ese filtro quedan menos señales, es preferible enviar menos noticias pero que sean nuevas. No reutilices noticias antiguas para rellenar.\\n\\nAsigna prioridad con este formato exacto:\\n★★★★★ Imprescindible\\n★★★★☆ Muy relevante\\n★★★☆☆ Interesante\\n★★☆☆☆ Opcional\\n★☆☆☆☆ Poco relevante\\n\\nDevuelve SOLO JSON válido con esta forma exacta:\\n{\\n  \"fecha\":\"${cfg.today}\",\\n  \"hora\":\"${cfg.hora}\",\\n  \"resumen_ejecutivo\":\"\",\\n  \"creadores_destacados\":[{\"prioridad\":\"\",\"titular\":\"\",\"fuentes\":[\"\"],\"url\":\"\",\"resumen\":\"contenido destacado de canal/creador\",\"por_que_importa\":\"\"}],\n  \"top_noticias_ia\":[{\"prioridad\":\"\",\"titular\":\"\",\"fuentes\":[\"\"],\"url\":\"\",\"resumen\":\"campo obligatorio, 1-2 frases\",\"por_que_importa\":\"campo obligatorio, 1 frase\"}],\\n  \"herramientas_y_modelos\":[{\"prioridad\":\"\",\"nombre\":\"\",\"que_hace\":\"\",\"uso_practico\":\"\",\"fuentes\":[\"\"],\"url\":\"\"}],\n  \"papers_recientes\":[{\"prioridad\":\"\",\"titulo\":\"\",\"autores\":\"\",\"fuentes\":[\"\"],\"url\":\"\",\"resumen\":\"\",\"por_que_deberia_leerlo\":\"\"}],\\n  \"tendencias_detectadas\":[{\"prioridad\":\"\",\"tendencia\":\"\",\"explicacion\":\"\",\"posible_oportunidad\":\"\",\"fuentes\":[\"\"]}],\\n  \"ideas_ia_radar\":[{\"prioridad\":\"\",\"idea_video\":\"\",\"hook\":\"\",\"enfoque\":\"\",\"cta\":\"\",\"fuentes\":[\"\"]}],\\n  \"fuentes_con_problemas\":[\"\"]\\n}\\n\\nNo dejes campos vacíos: si falta detalle, resume el titular y explica la utilidad práctica. Da más cobertura que antes: CREADORES_DESTACADOS máximo 12 y prioriza canales/influencers; TOP NOTICIAS máximo 20; HERRAMIENTAS/MODELOS máximo 12; PAPERS_RECIENTES máximo 8; TENDENCIAS máximo 8. En papers_recientes incluye solo papers recientes y relevantes de arXiv/IA; explica por qué debería leerlos hoy. No generes sección de ideas para IA Radar.\\n\\nFuentes revisadas:\\n${sourceNames.join(', ')}\\n\\nEstado de recolección:\\n${status.map(s=>'- '+s).join('\\n')}\\n\\nTitulares descartados por repetidos en la ventana anti-duplicados de los últimos 14 días:\\n${discardedSample.length ? discardedSample.map(t => '- ' + t).join('\\n') : '- ninguno'}\\n\\nSeñales nuevas disponibles para hoy:\\n${JSON.stringify(top, null, 2)}`;\nreturn [{ json: { ...cfg, signals: top, collectionStatus: status, sourcesReviewed: sourceNames, prompt, previousSentDiscarded: repeated.length, discardedTitles: discardedSample, historyWindowDays, historyEntriesUsed: recentHistory.length } }];"
+      },
+      "id": "5bcc8006-782a-43d0-a881-563648de7d5f",
+      "name": "Recolectar blogs y canales YouTube",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.OPENROUTER_API_KEY}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "HTTP-Referer",
+              "value": "https://ara-daily-ai-watch.local"
+            },
+            {
+              "name": "X-Title",
+              "value": "Ara Daily AI Watch"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"openai/gpt-4o-mini\",\n  \"messages\": [\n    {\"role\": \"system\", \"content\": \"Responde solo JSON válido, sin markdown.\"},\n    {\"role\": \"user\", \"content\": {{$json.prompt.toJsonString()}}}\n  ],\n  \"temperature\": 0.35,\n  \"max_tokens\": 4500\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "e4580cc2-a39f-4597-ae79-2b9ad9c738d3",
+      "name": "Compilar briefing con OpenRouter",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        60,
+        -20
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst root = $json;\nconst content = root.choices?.[0]?.message?.content || root.message?.content || JSON.stringify(root);\nfunction extractJson(s){\n  s = String(s||'').trim();\n  if (s.startsWith('```')) s = s.replace(/^```(?:json)?\\s*/,'').replace(/```$/,'').trim();\n  try { return JSON.parse(s); } catch (e) {}\n  const a=s.indexOf('{'), b=s.lastIndexOf('}');\n  if (a>=0 && b>a) {\n    const candidate=s.slice(a,b+1);\n    try { return JSON.parse(candidate); } catch (e) {}\n  }\n  return null;\n}\nconst cfg = $('Recolectar blogs y canales YouTube').first().json;\nconst parsed = extractJson(content);\nfunction fromSignal(s, idx){\n  return {\n    prioridad: idx < 3 ? '★★★★☆ Muy relevante' : '★★★☆☆ Interesante',\n    titular: s.title || s.titular || s.nombre || 'Señal de IA detectada',\n    fuentes: s.supportingSources || [s.source].filter(Boolean),\n    fuente: s.source || '',\n    url: s.url || '',\n    resumen: s.summary || s.descripcion || 'Señal relevante detectada en las fuentes monitorizadas.',\n    por_que_importa: 'Puede servir como noticia, idea de contenido o alerta práctica para IAradar.'\n  };\n}\nconst fallbackSignals = Array.isArray(cfg.signals) ? cfg.signals : [];\nconst data = parsed || {\n  fecha: cfg.today,\n  hora: cfg.hora,\n  resumen_ejecutivo: `Briefing de emergencia: el modelo devolvió JSON imperfecto, pero se recuperaron ${fallbackSignals.length} señales reales de las fuentes monitorizadas.`,\n  creadores_destacados: fallbackSignals.filter(s => s.type === 'youtube').slice(0,8).map(fromSignal),\n  top_noticias_ia: fallbackSignals.filter(s => s.type !== 'youtube').slice(0,12).map(fromSignal),\n  herramientas_y_modelos: [],\n  cursos_gratuitos: [],\n  papers_recientes: [],\n  tendencias_detectadas: []\n};\nconst fecha = data.fecha || cfg.today || new Date().toISOString().slice(0,10);\nconst hora = data.hora || cfg.hora || new Date().toLocaleTimeString('es-ES', {timeZone:'Atlantic/Canary', hour:'2-digit', minute:'2-digit'});\nfunction arr(v){ return Array.isArray(v) ? v : []; }\nfunction fuentes(x){ return arr(x.fuentes || x.fuentes_respaldo || x.supportingSources || (x.fuente?[x.fuente]:[])).filter(Boolean); }\nfunction prio(v){ const s=String(v||'').trim(); if(s.includes('★★★★★')) return '★★★★★ Imprescindible'; if(s.includes('★★★★')) return '★★★★☆ Muy relevante'; if(s.includes('★★★')) return '★★★☆☆ Interesante'; if(s.includes('★★')) return '★★☆☆☆ Opcional'; if(s.includes('★')) return '★☆☆☆☆ Poco relevante'; return '★★★☆☆ Interesante'; }\nfunction compact(v){ return String(v||'').replace(/\\s+/g,' ').trim(); }\nconst news = arr(data.top_noticias_ia || data.titulares).slice(0,20).map(x=>({prioridad:prio(x.prioridad), titular:compact(x.titular||x.titulo||'Novedad de IA detectada'), fuentes:fuentes(x), fuente:x.fuente||'', url:x.url||'', resumen:compact(x.resumen)||'Señal relevante detectada en las fuentes revisadas.', por_que_importa:compact(x.por_que_importa)||'Puede afectar a herramientas, automatización, productividad o estrategia tecnológica.'}));\nlet creators = arr(data.creadores_destacados).slice(0,12).map(x=>({prioridad:prio(x.prioridad), titular:compact(x.titular||x.titulo||x.idea||'Contenido destacado de creador'), fuentes:fuentes(x), fuente:x.fuente||'', url:x.url||'', resumen:compact(x.resumen||x.que_aporta)||'Contenido relevante publicado por un canal o creador de IA.', por_que_importa:compact(x.por_que_importa||x.oportunidad)||'Útil para detectar tendencias prácticas y herramientas en español.'}));\nif (!creators.length) creators = (cfg.signals||[]).filter(s=>s.type==='youtube').slice(0,12).map(s=>({prioridad:'★★★☆☆ Interesante', titular:s.title, fuentes:s.supportingSources||[s.source], fuente:s.source, url:s.url, resumen:'Vídeo o publicación reciente de canal/creador monitorizado.', por_que_importa:'Aporta señal práctica desde creadores españoles de IA, productividad o automatización.'}));\nlet resumen = compact(data.resumen_ejecutivo);\nif (!resumen) resumen = news.length ? `Radar diario con ${cfg.sourcesReviewed?.length||0} fuentes y foco reforzado en creadores. Señales principales: ${news.slice(0,3).map(n=>n.titular).join(' · ')}.` : 'No se detectaron señales suficientemente relevantes en la revisión actual.';\nreturn [{ json: { fecha, hora, resumen_ejecutivo: resumen, creadores_destacados: creators, top_noticias_ia: news, herramientas_y_modelos: arr(data.herramientas_y_modelos).slice(0,12).map(x=>({...x, prioridad:prio(x.prioridad), nombre:compact(x.nombre||'Herramienta/modelo detectado'), que_hace:compact(x.que_hace||x.descripcion)||'Herramienta o modelo relacionado con IA detectado en las fuentes revisadas.', uso_practico:compact(x.uso_practico)||'Evaluar como posible recurso práctico para productividad o automatización.', fuentes:fuentes(x)})), cursos_gratuitos: arr(data.cursos_gratuitos || data.cursos || []).slice(0,12).map(x=>({prioridad:prio(x.prioridad), titular:compact(x.titular||x.titulo||x.nombre||'Curso gratuito detectado'), fuentes:fuentes(x), fuente:x.fuente||'', url:x.url||'', resumen:compact(x.resumen||x.descripcion||x.que_aporta)||'Curso, bootcamp o recurso gratuito útil para aprender IA, programación o tecnología.', por_que_importa:compact(x.por_que_importa||x.oportunidad)||'Puede ayudar a la comunidad a formarse sin coste.'})), papers_recientes: arr(data.papers_recientes).slice(0,8).map(x=>({prioridad:prio(x.prioridad), titulo:compact(x.titulo||x.title||'Paper reciente de IA'), autores:compact(x.autores||x.authors||''), fuentes:fuentes(x), url:x.url||'', resumen:compact(x.resumen)||'Paper reciente detectado en fuentes académicas de IA.', por_que_deberia_leerlo:compact(x.por_que_deberia_leerlo||x.por_que_importa)||'Puede aportar ideas técnicas o tendencias emergentes para seguir al día.'})), tendencias_detectadas: arr(data.tendencias_detectadas||data.tendencias).slice(0,8).map(x=>({prioridad:prio(x.prioridad), tendencia:compact(x.tendencia||'Tendencia detectada'), explicacion:compact(x.explicacion||x.implicacion)||'Patrón observado en las señales revisadas.', posible_oportunidad:compact(x.posible_oportunidad)||'Puede convertirse en seguimiento editorial o análisis práctico.', fuentes:fuentes(x)})), fuentes_con_problemas: arr(data.fuentes_con_problemas), collectionStatus: cfg.collectionStatus||[], sourcesReviewed: cfg.sourcesReviewed||[], totalSignals: (cfg.signals||[]).length, previousSentDiscarded: cfg.previousSentDiscarded||0, discardedTitles: cfg.discardedTitles||[], historyWindowDays: cfg.historyWindowDays||14, historyEntriesUsed: cfg.historyEntriesUsed||0, chatId: $('Configurar fuentes').first().json.chatId } }];\n"
+      },
+      "id": "8d1fbc47-8a6f-4f59-b922-b09ccca61013",
+      "name": "Normalizar briefing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        360,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst d = $json;\nfunction esc(v){ return String(v ?? '').replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c])); }\nfunction host(url){ try { return new URL(url).hostname.replace(/^www\\./,''); } catch { return ''; } }\nfunction link(url,label='Abrir fuente'){ return url ? `<a class=\"btn\" href=\"${esc(url)}\" target=\"_blank\" rel=\"noopener noreferrer nofollow\">${esc(label)} · ${esc(host(url)||'fuente')}</a>` : ''; }\nfunction srcs(v){ const a=Array.isArray(v)?v.filter(Boolean):[]; return a.length ? a.join(', ') : ''; }\nfunction pc(p){ const s=String(p||''); if(s.includes('★★★★★')) return 'p5'; if(s.includes('★★★★')) return 'p4'; if(s.includes('★★★')) return 'p3'; if(s.includes('★★')) return 'p2'; return 'p1'; }\nconst fecha=d.fecha||new Date().toISOString().slice(0,10), hora=d.hora||new Date().toLocaleTimeString('es-ES',{timeZone:'Atlantic/Canary',hour:'2-digit',minute:'2-digit'});\nconst influencers=d.creadores_destacados||[], noticias=d.top_noticias_ia||[], herramientas=d.herramientas_y_modelos||[], papers=d.papers_recientes||[], tendencias=d.tendencias_detectadas||[];\nconst statSources=(d.sourcesReviewed||[]).length, statSignals=d.totalSignals||0, statDiscarded=d.previousSentDiscarded||0, statHistoryDays=d.historyWindowDays||14;\nconst top=noticias[0]||influencers[0]||{};\nfunction card(n,i,kind='news'){\n  const title=n.titular||n.titulo||n.idea||n.nombre||'';\n  const resumen=n.resumen||n.que_aporta||n.que_hace||'';\n  const importa=n.por_que_importa||n.uso_practico||n.oportunidad||'';\n  return `<article class=\"card reveal ${kind}\"><div class=\"card-top\"><span class=\"idx\">${kind==='creator'?'CREADOR':'#'+(i+1)}</span><span class=\"prio ${pc(n.prioridad)}\">${esc(n.prioridad||'★★★☆☆ Interesante')}</span></div><h3>${esc(title)}</h3><p><b>Fuente:</b> ${esc(srcs(n.fuentes)||n.fuente||host(n.url))}</p><p>${esc(resumen)}</p>${importa?`<p><b>Por qué importa:</b> ${esc(importa)}</p>`:''}${link(n.url, kind==='creator'?'Ver contenido':'Abrir noticia')}</article>`;\n}\nfunction tool(h){return `<article class=\"mini reveal\"><span class=\"prio ${pc(h.prioridad)}\">${esc(h.prioridad||'★★★☆☆ Interesante')}</span><h3>${esc(h.nombre||'')}</h3><p><b>Qué hace:</b> ${esc(h.que_hace||'')}</p><p><b>Uso práctico:</b> ${esc(h.uso_practico||'')}</p>${link(h.url,'Abrir recurso')}</article>`;}\nfunction trend(t){return `<article class=\"mini reveal\"><span class=\"prio ${pc(t.prioridad)}\">${esc(t.prioridad||'★★★☆☆ Interesante')}</span><h3>${esc(t.tendencia||'')}</h3><p>${esc(t.explicacion||'')}</p><p><b>Oportunidad:</b> ${esc(t.posible_oportunidad||'')}</p></article>`;}\nfunction paper(p){return `<article class=\"mini reveal paper\"><span class=\"prio ${pc(p.prioridad)}\">${esc(p.prioridad||'★★★☆☆ Interesante')}</span><h3>${esc(p.titulo||'')}</h3><p><b>Autores:</b> ${esc(p.autores||'No indicado')}</p><p>${esc(p.resumen||'')}</p><p><b>Por qué leerlo:</b> ${esc(p.por_que_deberia_leerlo||'')}</p>${link(p.url,'Abrir paper')}</article>`;}\nconst html = `<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1,viewport-fit=cover\"><title>Ara Daily AI Watch · ${esc(fecha)}</title><style>\n:root{--bg:#030507;--panel:#07100c;--panel2:#0a1510;--text:#dfffe9;--muted:#8db69a;--green:#37ff8b;--green2:#00d46a;--cyan:#69f7ff;--line:rgba(55,255,139,.32);--soft:rgba(55,255,139,.08);--shadow:0 18px 60px rgba(0,0,0,.45),0 0 24px rgba(55,255,139,.10)}*{box-sizing:border-box}body{margin:0;background:#030507;color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;line-height:1.55}body:before{content:\"\";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 20% -10%,rgba(55,255,139,.13),transparent 26%),radial-gradient(circle at 88% 8%,rgba(105,247,255,.10),transparent 22%),linear-gradient(180deg,#030507,#010202);pointer-events:none}.wrap{max-width:1120px;margin:auto;padding:14px}.hero{border:1px solid var(--line);background:linear-gradient(135deg,rgba(7,16,12,.96),rgba(1,2,2,.94));border-radius:24px;padding:24px;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero:after{content:\"\";position:absolute;inset:auto -20% -70% -20%;height:160px;background:radial-gradient(ellipse,rgba(55,255,139,.12),transparent 64%)}.sys{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.12em}.online{color:#001b0c;background:var(--green);padding:7px 10px;border-radius:999px;font-weight:900;box-shadow:0 0 18px rgba(55,255,139,.35)}h1{margin:22px 0 10px;color:var(--green);font-size:clamp(32px,8vw,76px);line-height:.9;letter-spacing:-.08em;text-shadow:0 0 18px rgba(55,255,139,.28)}h1:after{content:\"_\";animation:blink 1s steps(2,end) infinite;color:var(--cyan)}.subtitle{max-width:760px;color:#bfead0}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}.metric{background:rgba(55,255,139,.055);border:1px solid rgba(55,255,139,.20);border-radius:16px;padding:12px}.metric small{display:block;color:var(--muted);font-size:11px}.metric b{font-size:22px;color:white}.section{margin-top:24px}.section-title{display:flex;align-items:center;gap:10px;border-bottom:1px dashed var(--line);padding-bottom:10px;margin-bottom:14px}.section-title span{color:#001b0c;background:var(--green);font-weight:900;padding:4px 8px;border-radius:8px}.section-title h2{margin:0;color:white;font-size:22px}.summary,.card,.mini,.sources{background:linear-gradient(180deg,rgba(10,21,16,.95),rgba(3,5,7,.95));border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.summary{padding:18px;font-size:16px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.creator-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card,.mini{padding:16px}.card.creator{border-color:rgba(105,247,255,.42);box-shadow:0 18px 60px rgba(0,0,0,.42),0 0 24px rgba(105,247,255,.10)}.card-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.idx{color:var(--cyan);font-weight:900}.prio{font-size:12px;font-weight:900;border-radius:999px;padding:5px 8px;white-space:nowrap}.p5{background:var(--green);color:#001b0c}.p4{background:var(--cyan);color:#001014}.p3{background:#e8ff7a;color:#111500}.p2,.p1{border:1px solid rgba(141,182,154,.34);color:#cdeed6}h3{margin:10px 0;color:white;font-size:17px;line-height:1.25}b{color:var(--green)}p{margin:8px 0}.btn{display:inline-block;margin-top:8px;background:linear-gradient(90deg,var(--green),var(--cyan));color:#00130a;text-decoration:none;font-weight:900;border-radius:12px;padding:9px 11px;word-break:break-word}.sources{columns:2;padding:16px}.source{break-inside:avoid;color:#cfeeda;border-bottom:1px dashed rgba(55,255,139,.14);padding:5px 0;font-size:13px}.status{color:var(--muted);font-size:12px;margin-top:12px}.footer{text-align:center;color:var(--green);font-weight:900;letter-spacing:.08em;margin:30px 0 8px;padding:18px;border-top:1px solid var(--line)}.reveal{opacity:0;transform:translateY(12px);animation:rise .55s ease forwards}.reveal:nth-child(2){animation-delay:.05s}.reveal:nth-child(3){animation-delay:.1s}.reveal:nth-child(4){animation-delay:.15s}@keyframes rise{to{opacity:1;transform:none}}@keyframes blink{50%{opacity:0}}@media(max-width:760px){.wrap{padding:10px}.hero{padding:18px;border-radius:20px}.metrics{grid-template-columns:repeat(2,1fr)}.grid,.creator-grid,.mini-grid{grid-template-columns:1fr}.sources{columns:1}h1{font-size:40px}.section-title h2{font-size:18px}.card,.mini,.summary{padding:14px}.prio{display:inline-block;margin-top:6px}.card-top{display:block}}@media(max-width:420px){.metrics{grid-template-columns:1fr}.sys{font-size:11px}.subtitle{font-size:14px}}\n</style></head><body><main class=\"wrap\"><header class=\"hero\"><div class=\"sys\"><div>Sistema: AUT-003 · Ara Daily AI Watch</div><div class=\"online\">ONLINE</div><div>${esc(fecha)} · ${esc(hora)} Atlantic/Canary</div></div><h1>ARA DAILY AI WATCH</h1><p class=\"subtitle\">Informe diario independiente de IA en español. Formato móvil, visual tech hacker, sin efecto Matrix, con foco extra en canales y creadores.</p><div class=\"metrics\"><div class=\"metric\"><small>Fuentes</small><b>${esc(statSources)}</b></div><div class=\"metric\"><small>Señales</small><b>${esc(statSignals)}</b></div><div class=\"metric\"><small>Creadores</small><b>${esc(influencers.length)}</b></div><div class=\"metric\"><small>Noticias</small><b>${esc(noticias.length)}</b></div><div class=\"metric\"><small>Papers</small><b>${esc(papers.length)}</b></div></div></header><section class=\"section\"><div class=\"section-title\"><span>01</span><h2>Resumen ejecutivo</h2></div><div class=\"summary\">${esc(d.resumen_ejecutivo||'Sin resumen disponible.')}</div></section><section class=\"section\"><div class=\"section-title\"><span>02</span><h2>Canales e influencers destacados</h2></div><div class=\"creator-grid\">${influencers.map((n,i)=>card(n,i,'creator')).join('')||'<article class=\"card reveal\">Sin señales destacadas de creadores.</article>'}</div></section><section class=\"section\"><div class=\"section-title\"><span>03</span><h2>Top noticias IA</h2></div><div class=\"grid\">${noticias.map((n,i)=>card(n,i,'news')).join('')||'<article class=\"card reveal\">Sin noticias destacadas.</article>'}</div></section><section class=\"section\"><div class=\"section-title\"><span>04</span><h2>Herramientas, modelos y lanzamientos</h2></div><div class=\"mini-grid\">${herramientas.map(tool).join('')||'<article class=\"mini reveal\">Sin herramientas o modelos destacados.</article>'}</div></section><section class=\"section\"><div class=\"section-title\"><span>05</span><h2>Papers IA recientes</h2></div><div class=\"mini-grid\">${papers.map(paper).join('')||'<article class=\"mini reveal\">Sin papers destacados.</article>'}</div></section><section class=\"section\"><div class=\"section-title\"><span>06</span><h2>Tendencias detectadas</h2></div><div class=\"mini-grid\">${tendencias.map(trend).join('')||'<article class=\"mini reveal\">Sin tendencias destacadas.</article>'}</div></section><section class=\"section\"><div class=\"section-title\"><span>07</span><h2>Fuentes revisadas</h2></div><div class=\"sources\">${(d.sourcesReviewed||[]).map(s=>`<div class=\"source\">${esc(s)}</div>`).join('')}</div><details class=\"status\"><summary>Estado técnico de recolección</summary>${(d.collectionStatus||[]).map(s=>`<div>- ${esc(s)}</div>`).join('')}</details></section><footer class=\"footer\">Generated by Ara / Hermes — AUT-003</footer></main></body></html>`;\nconst fileName=`ara-daily-ai-watch-${fecha}.html`;\nreturn [{json:{chatId:d.chatId,fileName,caption:`Ara Daily AI Watch - tech hacker mobile - ${fecha} ${hora}`,text:`ARA DAILY AI WATCH - ${fecha} ${hora}\\nHTML móvil tech hacker generado: ${statSources} fuentes, ${statSignals} señales nuevas, ${statDiscarded} repetidas descartadas en ${statHistoryDays} días, ${influencers.length} señales de creadores.`},binary:{data:{data:Buffer.from(html,'utf8').toString('base64'),mimeType:'text/html',fileName,fileExtension:'html'}}}];\n"
+      },
+      "id": "dce1a3c2-45a6-4687-bf02-1eb0ac5418fd",
+      "name": "Preparar documento blog HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendDocument",
+        "chatId": "={{$json.chatId}}",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "additionalFields": {
+          "caption": "={{$json.caption}}",
+          "fileName": "={{$json.fileName}}",
+          "disable_notification": false
+        }
+      },
+      "id": "afa685bf-2b70-46c7-9714-cc9feb34bece",
+      "name": "Enviar documento blog por Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        920,
+        80
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "const state = $getWorkflowStaticData('global');\nconst report = $('Normalizar briefing').first().json;\nfunction norm(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/https?:\\/\\/\\S+/g,'').replace(/[^a-z0-9]+/g,' ').trim().slice(0,120); }\nfunction canonicalUrl(url){ return String(url||'').trim().toLowerCase().replace(/[?#].*$/,'').replace(/\\/$/,''); }\nfunction keyFor(title, url){ const u = canonicalUrl(url); const t = norm(title); return u ? `u:${u}` : (t ? `t:${t}` : ''); }\nconst buckets = [\n  ...(report.creadores_destacados||[]),\n  ...(report.top_noticias_ia||[]),\n  ...(report.herramientas_y_modelos||[]),\n  ...(report.cursos_gratuitos||[]),\n  ...(report.papers_recientes||[]),\n  ...(report.tendencias_detectadas||[]),\n];\nconst keys = [];\nconst titles = [];\nfor (const item of buckets) {\n  const title = item.titular || item.titulo || item.nombre || item.tendencia || item.idea_video || '';\n  const titleKey = norm(title);\n  const key = keyFor(title, item.url || '');\n  if (key) keys.push(key);\n  if (titleKey) titles.push(titleKey);\n}\nconst uniqueKeys = [...new Set(keys)].slice(0, 500);\nconst uniqueTitles = [...new Set(titles)].slice(0, 500);\nconst reportDate = report.fecha || new Date().toISOString().slice(0,10);\nconst todayEntry = { date: reportDate, keys: uniqueKeys, titles: uniqueTitles, count: uniqueKeys.length };\nconst prevHistory = Array.isArray(state.historyEntries) ? state.historyEntries : [];\nconst merged = [todayEntry, ...prevHistory.filter(entry => entry && entry.date !== reportDate)];\nconst keepMs = Date.now() - (21 * 24 * 60 * 60 * 1000);\nstate.historyEntries = merged.filter(entry => {\n  if (!entry || !entry.date) return false;\n  const ts = Date.parse(entry.date);\n  return Number.isFinite(ts) && ts >= keepMs;\n}).slice(0, 30);\nstate.lastSentKeys = uniqueKeys;\nstate.lastSentTitles = uniqueTitles;\nstate.lastSentDate = reportDate;\nstate.lastSentCount = uniqueKeys.length;\nreturn items;"
+      },
+      "id": "4c0a7c2e-4e77-4bfc-98d8-1ed618d1c28f",
+      "name": "Registrar historial enviado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1180,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst d = $json;\n// Rama desactivada: WEBHOOKS está vacío a propósito.\n// Para activarla, guarda las URLs de Discord en una credencial de n8n, nunca en el código.\nconst WEBHOOKS = {};\nconst CHANNEL_LIMIT = 6;\nfunction clean(v, max=900){\n  return String(v ?? '')\n    .replace(/\\b(n8n|Hermes|Nau|workflow|fuentes monitorizadas|generado automáticamente|automatizado|HTML completo enviado por Ara|modelo devolvió JSON)\\b/gi,'')\n    .replace(/\\s+/g,' ').trim().slice(0,max);\n}\nfunction host(url){ try { return new URL(url).hostname.replace(/^www\\./,''); } catch { return ''; } }\nfunction titleOf(x){ return clean(x.titular || x.titulo || x.title || x.nombre || x.tendencia || 'Actualidad IA', 240); }\nfunction urlOf(x){ return String(x.url || '').trim(); }\nfunction descOf(x){ return clean(x.resumen || x.que_hace || x.descripcion || x.explicacion || x.por_que_importa || x.uso_practico || x.por_que_deberia_leerlo || 'Recurso relevante para seguir la actualidad de la inteligencia artificial.', 760); }\nfunction sourceOf(x){ const f=Array.isArray(x.fuentes)?x.fuentes.filter(Boolean).join(', '):(x.fuente||''); return clean(f || host(urlOf(x)) || 'Fuente', 180); }\nfunction keyOf(x){ const u=urlOf(x).toLowerCase().replace(/[?#].*$/,'').replace(/\\/$/,''); const t=titleOf(x).toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim(); return u || t; }\nfunction isCourse(x){ const s=(titleOf(x)+' '+descOf(x)+' '+sourceOf(x)+' '+urlOf(x)).toLowerCase(); return /(curso|gratis|gratuito|bootcamp|beca|formaci[oó]n|aprender|learn|freecodecamp|mouredev|midudev|kaggle|coursera|edx|microsoft learn|google act[ií]vate|skill builder)/i.test(s); }\nfunction isPaper(x){ const s=(titleOf(x)+' '+sourceOf(x)+' '+urlOf(x)).toLowerCase(); return /(paper|arxiv|research|investigaci[oó]n|estudio|cs\\.ai|cs\\.lg|cs\\.cl|cs\\.cv)/i.test(s); }\nfunction isCreator(x){ const s=(titleOf(x)+' '+sourceOf(x)+' '+urlOf(x)).toLowerCase(); return /(youtube|youtu\\.be|shorts|creador|tutorial|canal|dotcsv|maxmaxdata|midudev|mouredev|c[oó]digo facilito)/i.test(s); }\nfunction isTool(x){ const s=(titleOf(x)+' '+descOf(x)).toLowerCase(); return /(herramienta|modelo|launch|lanzamiento|app|plugin|agent|agente|api|openai|claude|gemini|qwen|llama|mistral|copilot|cursor|runway|veo|kling|midjourney|stable diffusion|flux|comfyui|salesforce)/i.test(s); }\nconst palettes={\n  'ia-noticias':['0b1220','22c55e','dfffe9'],\n  'modelos-herramientas':['101728','38bdf8','e0f2fe'],\n  'creadores-ia':['1d1028','f472b6','fff1f2'],\n  'papers':['201a0b','facc15','fff7ed'],\n  'cursos-gratuitos':['0f172a','a3e635','f7fee7']\n};\nfunction imageFor(channel,x,idx){\n  const p=palettes[channel]||palettes['ia-noticias'];\n  const label=encodeURIComponent((channel.replace(/-/g,' ').toUpperCase())+'\\n'+titleOf(x).slice(0,72));\n  return `https://placehold.co/1200x675/${p[0]}/${p[1]}.png?text=${label}&font=montserrat`;\n}\nfunction makePost(channel, x, label, color, idx){\n  const url=urlOf(x), title=titleOf(x), desc=descOf(x);\n  const content=url ? `🔗 [Leer fuente](${url})` : '';\n  const embed={\n    title,\n    description:`**${label}**\\n${desc}${url ? `\\n\\n[Leer noticia completa](${url})` : ''}`,\n    color,\n    fields:[{name:'Fuente', value: sourceOf(x), inline:true}],\n    image:{url:imageFor(channel,x,idx)},\n    timestamp:new Date().toISOString(),\n    footer:{text:'IAradar'}\n  };\n  if(url) embed.url=url;\n  return {json:{webhookUrl:WEBHOOKS[channel], discordPayload:{username:'IAradar', content, embeds:[embed], allowed_mentions:{parse:[]}}}};\n}\nconst buckets={'ia-noticias':[], 'modelos-herramientas':[], 'creadores-ia':[], 'papers':[], 'cursos-gratuitos':[]};\nconst seen=new Set();\nfunction route(x, preferred){\n  const k=keyOf(x); if(!k || seen.has(k)) return; seen.add(k);\n  let ch=preferred;\n  if(isCourse(x)) ch='cursos-gratuitos'; else if(isPaper(x)) ch='papers'; else if(isCreator(x)) ch='creadores-ia'; else if(isTool(x)) ch='modelos-herramientas';\n  buckets[ch].push(x);\n}\nfor (const x of (d.cursos_gratuitos||[])) route(x,'cursos-gratuitos');\nfor (const x of (d.papers_recientes||[])) route(x,'papers');\nfor (const x of (d.herramientas_y_modelos||[])) route(x,'modelos-herramientas');\nfor (const x of (d.creadores_destacados||[])) route(x,'creadores-ia');\nfor (const x of (d.top_noticias_ia||[])) route(x,'ia-noticias');\nconst labels={'ia-noticias':'🗞️ Noticias IA','modelos-herramientas':'🧠 Modelos / herramientas','creadores-ia':'🎥 Creadores IA','papers':'📄 Papers / investigación','cursos-gratuitos':'🎓 Cursos gratuitos'};\nconst colors={'ia-noticias':0x22c55e,'modelos-herramientas':0x38bdf8,'creadores-ia':0xf472b6,'papers':0xfacc15,'cursos-gratuitos':0xa3e635};\nconst out=[];\nfor (const ch of Object.keys(buckets)) buckets[ch].slice(0,CHANNEL_LIMIT).forEach((x,i)=>out.push(makePost(ch,x,labels[ch],colors[ch],i)));\nreturn out;\n"
+      },
+      "id": "32edbfa7-102c-450c-9bdf-ca3cb5c14a7a",
+      "name": "Preparar publicación Discord",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        -260
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$json.webhookUrl}}",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.discordPayload}}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "ba71a470-7b22-4a5e-ab90-d1b51b4a2637",
+      "name": "Publicar noticias en Discord",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        -260
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const report = $('Normalizar briefing').first().json;\nconst rank = value => {\n  const s=String(value || '');\n  if (s.includes('★★★★★')) return 5; if (s.includes('★★★★')) return 4;\n  if (s.includes('★★★')) return 3; if (s.includes('★★')) return 2; return 1;\n};\nconst central=/(openai|chatgpt|\\bgpt\\b|\\bgpt[-\\s]?\\d|anthropic|\\bclaude\\b|google\\s*(ai|deepmind)|\\bgemini\\b|mistral|llama|hugging\\s*face|modelo(?:s)?\\s+(?:de\\s+)?(?:ia|lenguaje)|\\bllm\\b|agente(?:s)?\\s+(?:de\\s+)?ia|herramienta(?:s)?\\s+(?:de\\s+)?ia|api\\s+(?:de\\s+)?ia|prompt(?:ing)?|multimodal|generaci[oó]n\\s+(?:de\\s+)?(?:imagen|v[ií]deo|audio|texto))/i;\nconst practical=/(gratis|free|api|lanz|disponible|actualiz|tutorial|gu[ií]a|paso a paso|c[oó]mo usar|automatiz|integra|crea|genera|program|herramienta|funci[oó]n|mejora|reduce|ahorra|minutos|open source|c[oó]digo abierto)/i;\nconst unrelated=/(acero|siderurg|agua potable|tratamiento de agua|seguros?|banca|inmobiliari|agricultura|miner[ií]a|petr[oó]leo|log[ií]stica|ciberseguridad|ciber|cyber|seguridad|security|security incident|geoespacial|geospatial|planetary|olmoearth|equipo legal|legal team|healthcare|medical|defense|military|cms|gestor(?:es)? de contenidos|historia de la ia|infraestructura de ia con|workforce transformation)/i;\nconst official=/(openai\\.com|anthropic\\.com|blog\\.google|deepmind\\.google|ai\\.google|huggingface\\.co|mistral\\.ai|ai\\.meta\\.com|github\\.com|arxiv\\.org)/i;\nconst seen=new Set(), candidates=[];\nfor (const [section,value] of Object.entries(report || {})) {\n  if (!Array.isArray(value)) continue;\n  for (const x of value) {\n    if (!x || typeof x !== 'object') continue;\n    const title=String(x.titular || x.title || x.nombre || '').trim();\n    const url=String(x.url || x.enlace || x.link || '').trim();\n    if (!title || !/^https?:\\/\\//i.test(url) || seen.has(url)) continue;\n    const blob=[title,x.resumen,x.descripcion,x.por_que_importa,x.accion_practica,x.fuente].filter(Boolean).join(' ');\n    if (!central.test(blob) || unrelated.test(blob)) continue;\n    seen.add(url);\n    let score=rank(x.prioridad)*20;\n    if (practical.test(blob)) score+=20;\n    if (official.test(url)) score+=18;\n    if (/(openai|chatgpt|gpt|anthropic|claude|gemini|google deepmind)/i.test(blob)) score+=12;\n    candidates.push({...x,titular:title,url,seccion_origen:section,score_x:score});\n  }\n}\ncandidates.sort((a,b)=>b.score_x-a.score_x);\n// Sin 3 noticias con foco X: no se generan borradores y la rama termina sin error.\nif (candidates.length < 3) return [];\nconst approvedPublishedPattern = \"PATRÓN EDITORIAL APROBADO POR EL USUARIO (imita estructura, ritmo y utilidad; nunca copies hechos):\\nA) ChatGPT y Codex abren nuevas formas de aprender 🎓\\n• Usa plugins educativos para enseñar, investigar y crear.\\n• Prueba el flujo que encaje con tu clase o estudio.\\n#ChatGPT #IA\\n\\nB) ¿Claude Code o n8n? Elige con 5 preguntas ⚡\\n• Compara tu caso antes de construir.\\n• Valora código, automatización y mantenimiento.\\n#Claude #IA\\n\\nC) Copilot o API directa: el precio no lo es todo 💸\\n• Compara acceso al modelo, flujo de código y políticas.\\n• Elige según el trabajo que quieres evitar.\\n#Copilot #IA\\n\\nEstos tres patrones gustaron y fueron publicados. Cada nuevo borrador debe parecerse en claridad, ritmo, enfoque práctico y longitud, pero usar únicamente los hechos de su noticia.\";\nconst prompt = `Eres Mora, editora de @IAradarES. Elige y convierte exactamente 3 CANDIDATAS en borradores para X.\\n\\n${approvedPublishedPattern}\n\nFOCO TEMÁTICO OBLIGATORIO:\n- Inteligencia artificial en español, especialmente Claude/Anthropic, GPT/ChatGPT/OpenAI, Gemini/Google, modelos, agentes y herramientas prácticas.\n- Excluye industria o sectores ajenos (acero, agua, seguros, banca, CMS y ciberseguridad genérica), salvo relación directa y útil con modelos o herramientas de IA.\n- Prioriza el ángulo “cómo usarlo” o “qué puedes hacer con esto” por encima del anuncio corporativo.\n\nFORMATO OBLIGATORIO DE texto_x:\n- Todo en español; traduce títulos y resúmenes ingleses. Solo conserva marcas, modelos y tecnicismos sin traducción natural.\n- OBLIGATORIO: texto_x debe incluir el gancho como primera línea; no basta con ponerlo en titulo. Usa una afirmación fuerte, cifra verificable o promesa concreta.\n- Después, 2 a 4 líneas cortas con beneficios, usos o pasos. Nada de párrafos largos ni tono de nota de prensa.\n- Voz cercana, enérgica y directa al lector; usa verbos de acción (“puedes…”, “prueba…”, “crea…”).\n- 1 o 2 emojis como máximo, con función real. 1 o 2 hashtags como máximo.\n- Se permiten 1 o 2 palabras en MAYÚSCULAS para impacto, nunca frases completas.\n- Corto y directo, siempre con frases completas. Prohibido cortar por caracteres o añadir relleno genérico. Máximo 280 caracteres efectivos incluyendo el enlace t.co.\n- La URL original exacta debe ir al final; nunca en el gancho ni entre las líneas.\n- Gancho llamativo pero verificable: sin clickbait falso, cifras inventadas ni hype vacío.\n- Tono neutral-positivo y hechos verificados al hablar de Anthropic/Claude, OpenAI/GPT o Google/Gemini.\n- No mezcles noticias, no inventes imagen y no añadas fuentes.\n\nDevuelve SOLO JSON válido:\n{\"publicaciones\":[{\"titulo\":\"\",\"fuente\":\"\",\"url\":\"\",\"texto_x\":\"\",\"por_que_importa\":\"\",\"accion_practica\":\"\",\"sugerencia_visual\":\"\",\"imagen_url\":\"\",\"categoria\":\"noticia_ia|herramienta_modelo|paper\",\"puntuacion_mora\":0}]}\nFECHA: ${report.fecha || ''}\nCANDIDATAS:\n${JSON.stringify(candidates.filter(x=>!/(arxiv\\.org)/i.test(x.url)).slice(0,20))}`;\nreturn [{json:{prompt,reportDate:report.fecha || '',candidateUrls:candidates.map(x=>x.url),candidates}}];"
+      },
+      "id": "34b127b1-132e-4e74-82c9-2e6ed44ec834",
+      "name": "Preparar prompt X desde Ara Daily AI Watch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.OPENROUTER_API_KEY}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "HTTP-Referer",
+              "value": "https://iaradar-x.local"
+            },
+            {
+              "name": "X-Title",
+              "value": "IAradar X from Ara Daily AI Watch"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"openai/gpt-4o-mini\",\n  \"messages\": [\n    {\"role\": \"system\", \"content\": \"Responde solo JSON válido, sin markdown.\"},\n    {\"role\": \"user\", \"content\": {{$json.prompt.toJsonString()}}}\n  ],\n  \"temperature\": 0.25,\n  \"max_tokens\": 2600\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "e422e65d-4733-48d4-83f9-1a298c89ee45",
+      "name": "Redactar 3 borradores X del briefing",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        760,
+        500
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json || {};\nconst content = raw.choices?.[0]?.message?.content || raw.content || raw;\nlet data = content;\nif (typeof content === 'string') {\n  const cleaned = content.trim().replace(/^```(?:json)?\\s*/,'').replace(/```$/,'').trim();\n  try { data = JSON.parse(cleaned); } catch (error) { throw new Error('El redactor de X no devolvió JSON válido: ' + error.message); }\n}\nconst publicaciones = Array.isArray(data.publicaciones) ? data.publicaciones : (Array.isArray(data) ? data : []);\nif (publicaciones.length !== 3) throw new Error(`El redactor debe devolver exactamente 3 publicaciones; devolvió ${publicaciones.length}.`);\nconst prep = $('Preparar prompt X desde Ara Daily AI Watch').first().json;\nconst allowed = new Set((prep.candidateUrls || []).map(String));\nconst seen = new Set();\nconst nl = String.fromCharCode(10);\nconst esc = (v) => String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');\nconst attr = (v) => esc(v).replace(/\"/g,'&quot;');\nconst isSpanishText = (value) => {\n  const text=String(value || '').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,' ');\n  const es=(text.match(/\\b(el|la|los|las|un|una|unos|unas|de|del|que|para|con|por|como|esta|este|estos|estas|su|sus|se|puede|permite|mejora|nueva|nuevo|sobre|entre|desde|hacia)\\b/g)||[]).length;\n  const en=(text.match(/\\b(the|and|for|with|from|this|that|these|those|how|what|new|can|will|into|toward|at|by|on|of|to|is|are)\\b/g)||[]).length;\n  return es >= 3 && es >= en;\n};\nconst preferredXFormat = value => {\n  const lines=String(value || '').split(/\\n+/).map(x=>x.trim()).filter(Boolean);\n  if (lines.length < 3 || lines.length > 5 || [...lines[0]].length > 95) return false;\n  const detailLines=lines.slice(1).filter(line=>!/^#[\\p{L}\\p{N}_]+(?:\\s+#[\\p{L}\\p{N}_]+)?$/u.test(line));\n  if (/^[•#-]/.test(lines[0]) || detailLines.length < 2 || lines.slice(1).some(line => [...line].length > 120)) return false;\n  const hashtags=(String(value).match(/#[\\p{L}\\p{N}_]+/gu)||[]).length;\n  const emojis=(String(value).match(/\\p{Extended_Pictographic}/gu)||[]).length;\n  const caps=(String(value).match(/\\b[A-ZÁÉÍÓÚÑÜ]{2,}\\b/gu)||[]).filter(x=>!['IA','GPT','API','LLM'].includes(x)).length;\n  const prose=lines.filter(line=>!/^#[\\p{L}\\p{N}_]+(?:\\s+#[\\p{L}\\p{N}_]+)?$/u.test(line));\n  const complete=prose.every(line => !/(?:\\b(?:de|la|el|y|o|para|con|en|por|una|un|sus|su)|[,;:])$/i.test(line.replace(/[.!?⚡🎓💸🚀]+$/u,'').trim()));\n  return hashtags <= 2 && emojis <= 2 && caps <= 2 && complete;\n};\nconst drafts = publicaciones.map((item, index) => {\n  const title = String(item.titulo || '').trim();\n  let post = String(item.texto_x || '').trim();\n  const url = String(item.url || '').trim();\n  if (!title || !post || !url) throw new Error(`Borrador ${index + 1}: faltan titulo, texto_x o url.`);\n  const languageSample=[title,post,item.por_que_importa,item.accion_practica,item.sugerencia_visual].filter(Boolean).join(' ');\n  if (!isSpanishText(languageSample) || !isSpanishText(post)) throw new Error(`Borrador ${index + 1}: detectado contenido no español. Se bloquea el envío a Telegram.`);\n  if (!allowed.has(url)) throw new Error(`Borrador ${index + 1}: URL ajena al briefing de Ara Daily AI Watch.`);\n  if (seen.has(url)) throw new Error(`Borrador ${index + 1}: URL repetida.`);\n  seen.add(url);\n  // X envuelve cada URL externa con t.co y la contabiliza como 23 caracteres,\n  // aunque la URL original (por ejemplo Google News) mida más de 280.\n  const formatBody=post.split(url).join(' ').trim();\n  if (!preferredXFormat(formatBody)) throw new Error(`Borrador ${index + 1}: debe tener gancho + 2-4 líneas cortas, máximo 2 emojis, 2 hashtags y 2 palabras de impacto en mayúsculas.`);\n  const xUrlWeight = 23;\n  const maxBody = 280 - xUrlWeight - 1;\n  let body = post.split(url).join(' ').split(/\\n+/).map(line=>line.replace(/\\s+/g,' ').trim()).filter(Boolean).join(nl).trim();\n  if (!body) throw new Error(`Borrador ${index + 1}: cuerpo vacío.`);\n  if ([...body].length > maxBody) throw new Error(`Borrador ${index + 1}: excede el límite efectivo de X; se bloquea en vez de cortar frases.`);\n  post = `${body} ${url}`;\n  const effectiveXLength = [...body].length + 1 + xUrlWeight;\n  if (effectiveXLength > 280 || !post.endsWith(url)) throw new Error(`Borrador ${index + 1}: no se pudo normalizar al límite efectivo de X.`);\n  const source = String(item.fuente || 'Fuente del briefing');\n  const why = String(item.por_que_importa || 'Seleccionada del briefing diario de Ara Daily AI Watch.');\n  const action = String(item.accion_practica || 'Revisar la fuente primaria antes de publicar.');\n  const visual = String(item.sugerencia_visual || 'Usar una captura legítima de la fuente.');\n  const category = String(item.categoria || 'noticia_ia');\n  const score = Math.max(0, Math.min(100, Number(item.puntuacion_mora) || 0));\n  const intent = 'https://x.com/intent/tweet?text=' + encodeURIComponent(post);\n  const image = item.imagen_url ? String(item.imagen_url) : 'La fuente no incluye una imagen oficial directa verificada; usar una captura legítima o publicar sin imagen.';\n  const lines = [\n    '⚠️ <b>PUBLICA SOLO DESDE @IAradarES</b>',\n    'Cambia primero de tu cuenta personal a @IAradarES y después abre el borrador.',\n    '',\n    '📡 <b>IAradar — LISTA PARA PUBLICAR</b>',\n    `Fecha del radar: ${esc(prep.reportDate || 'hoy')} · ${esc(category)}`,\n    `Puntuación Mora: ${score}/100`,\n    `<b>${index + 1}. ${esc(title)}</b>`,\n    '',\n    '<b>POST FINAL PARA X</b>',\n    esc(post),\n    '',\n    `<a href=\"${attr(intent)}\">ABRIR BORRADOR EN X</a>`,\n    '',\n    `<b>FUENTE:</b> ${esc(source)}`,\n    `<a href=\"${attr(url)}\">${esc(url)}</a>`,\n    `<b>IMAGEN:</b> ${esc(image)}`,\n    `<b>POR QUÉ PUBLICARLA:</b> ${esc(why)}`,\n    `<b>ACCIÓN PRÁCTICA:</b> ${esc(action)}`,\n    `<b>VISUAL SUGERIDO:</b> ${esc(visual)}`\n  ];\n  return {json:{telegram_text:lines.join(nl), selected_url:url, selected_title:title, texto_x:post, score}};\n});\nconst questionnaire = [\n  '📝 <b>REVISIÓN EDITORIAL DE LOS BORRADORES</b>',\n  '',\n  'Cuando termines, respóndeme brevemente:',\n  '1. ¿Qué borradores publicaste? (1, 2 y/o 3)',\n  '2. ¿Qué borradores no publicaste?',\n  '3. ¿Por qué descartaste cada uno?',\n  '',\n  '<b>Motivos posibles:</b> tema poco relevante, demasiado corporativo o comercial, poca utilidad práctica, demasiado técnico, fuente poco convincente, enfoque o gancho mejorable, repetido u otro motivo.',\n  '',\n  '<b>Ejemplo:</b> “Publiqué 2 y 3. No publiqué 1 porque el tema no me pareció relevante para la línea editorial de X.”',\n  '',\n  'Tu respuesta se usará para ajustar las próximas selecciones.'\n].join(nl);\ndrafts.push({json:{telegram_text:questionnaire, feedback_questionnaire:true}});\nreturn drafts;"
+      },
+      "id": "12b175a5-a894-494b-af1d-b8781a8d1790",
+      "name": "Validar y formatear 3 borradores X",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "={{ $json.telegram_text }}",
+        "additionalFields": {
+          "parse_mode": "HTML",
+          "appendAttribution": false
+        }
+      },
+      "id": "821398cf-e3e2-4015-893b-673f85ce459e",
+      "name": "Enviar 3 borradores X desde Ara Daily AI Watch",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1240,
+        500
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    }
+  ],
+  "connections": {
+    "Disparador diario 08:00": {
+      "main": [
+        [
+          {
+            "node": "Configurar fuentes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Probar manualmente": {
+      "main": [
+        [
+          {
+            "node": "Configurar fuentes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configurar fuentes": {
+      "main": [
+        [
+          {
+            "node": "Recolectar blogs y canales YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recolectar blogs y canales YouTube": {
+      "main": [
+        [
+          {
+            "node": "Compilar briefing con OpenRouter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compilar briefing con OpenRouter": {
+      "main": [
+        [
+          {
+            "node": "Normalizar briefing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar briefing": {
+      "main": [
+        [
+          {
+            "node": "Preparar documento blog HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar documento blog HTML": {
+      "main": [
+        [
+          {
+            "node": "Enviar documento blog por Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar documento blog por Telegram": {
+      "main": [
+        [
+          {
+            "node": "Registrar historial enviado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar publicación Discord": {
+      "main": [
+        [
+          {
+            "node": "Publicar noticias en Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar historial enviado": {
+      "main": [
+        [
+          {
+            "node": "Preparar prompt X desde Ara Daily AI Watch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar prompt X desde Ara Daily AI Watch": {
+      "main": [
+        [
+          {
+            "node": "Redactar 3 borradores X del briefing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redactar 3 borradores X del briefing": {
+      "main": [
+        [
+          {
+            "node": "Validar y formatear 3 borradores X",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar y formatear 3 borradores X": {
+      "main": [
+        [
+          {
+            "node": "Enviar 3 borradores X desde Ara Daily AI Watch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Atlantic/Canary"
+  },
+  "pinData": {}
+}
